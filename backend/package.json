@@ -1,0 +1,17 @@
+{
+  "name": "json-database",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.3",
+    "node-json-db": "^1.5.0",
+    "vue-barcode-reader": "^1.0.2"
+  }
+}
