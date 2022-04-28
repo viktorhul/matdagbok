@@ -1,18 +1,11 @@
 <template>
-  <ImageBarcodeReader @decode="onDecode" @error="onError"></ImageBarcodeReader>
+  <p>matdagbok</p>
 </template>
 
 <script>
-import { ImageBarcodeReader } from "vue-barcode-reader";
-
 export default {
   name: "App",
-  components: {
-    ImageBarcodeReader,
-  },
-  created() {
-    this.$barcodeScanner.init(this.onBarcodeScanned);
-  },
+  components: {},
 };
 </script>
 
