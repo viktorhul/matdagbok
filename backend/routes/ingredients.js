@@ -7,7 +7,7 @@ const router = express.Router()
 const db = new JsonDB(new Config("db", true, false, '/'))
 
 function addIngredient(ingredient) {
-    const { name, energy, protein, kolhydrat, fett } = ingredient
+    const { name, energy, portion, protein, kolhydrat, fett } = ingredient
 
     if (!name) return { ok: false, msg: 'No name given' }
     if (!energy) return { ok: false, msg: 'No kcal given' }
@@ -17,17 +17,24 @@ function addIngredient(ingredient) {
     if (current.length) return { ok: false, msg: 'Name already taken' }
 
     const data = {
-        name, energy, protein, kolhydrat, fett
+        name, energy, portion, protein, kolhydrat, fett
     }
     db.push('/ingredients', [data], false)
     return { ok: true }
 }
 
 router.post('/add', (req, res) => {
-    const result = addIngredient(
-        req.body
-    )
-    res.json(result)
+    const ingredients = req.body.ingredients
+
+    if (!ingredients) return res.json({ ok: false, msg: 'No ingredient' })
+
+    if (Array.isArray(ingredients)) {
+        ingredients.forEach(i => addIngredient(i))
+    } else {
+        addIngredient(ingredients)
+    }
+
+    res.json({ ok: true })
 })
 
 router.get('/', (req, res) => {
