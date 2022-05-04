@@ -1,5 +1,6 @@
 <template>
   <div>
+    <router-link to="/ingredients">Ingredients</router-link>
     <input
       type="text"
       placeholder="Ingredient"
