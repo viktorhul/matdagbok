@@ -8,7 +8,7 @@ dotenv.config()
 const express = require('express')
 const router = express.Router()
 
-const db = new JsonDB(new Config("db/db", true, false, '/'))
+const db = new JsonDB(new Config("db/db", true, true, '/'))
 
 function auth(req, res, next) {
     const authHeader = req.headers['authorization']
