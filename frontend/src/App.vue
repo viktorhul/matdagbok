@@ -1,65 +1,45 @@
 <template>
   <div>
-    <router-link to="/ingredients">Ingredients</router-link>
-    <input
-      type="text"
-      placeholder="Ingredient"
-      v-model="ingredient"
-      @keyup="checkIngredient"
-      list="ingredientsList"
-    />
-    <datalist id="ingredientsList">
-      <option
-        v-for="is in ingredientSuggestions"
-        :key="is"
-        :value="is.value"
-      ></option>
-    </datalist>
-    <input type="text" placeholder="Amount" v-model="ingredientAmount" />
+    <PageHeader />
+    <div class="router-view">
+      <router-view />
+    </div>
   </div>
 </template>
 
 <script>
+import PageHeader from "@/components/PageHeader";
+
 export default {
-  name: "App",
-  components: {},
-  data() {
-    return {
-      ingredient: "",
-      ingredientSuggestions: [
-        { value: "wow" },
-        { value: "bigboy" },
-        { value: "pang" },
-      ],
-    };
-  },
-  created() {
-    fetch("http://localhost:3000/ingredients")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.ok) {
-          data.data.forEach((d) => {
-            this.ingredientSuggestions = [];
-            this.ingredientSuggestions.push({ value: d.name });
-          });
-        }
-      });
-  },
-  methods: {
-    checkIngredient() {
-      console.log("wow");
-    },
+  components: {
+    PageHeader,
   },
 };
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.router-view {
+  padding: 10px;
+}
+
+.boxLink {
+  display: inline-block;
+  padding: 10px;
+  margin: 5px;
+  border-radius: 5px;
+  background: rgb(192, 235, 190);
+  color: green;
+  text-decoration: none;
+}
+
+.boxLink:hover {
+  opacity: 0.8;
 }
 </style>
