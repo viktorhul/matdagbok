@@ -14,8 +14,10 @@ function auth(req, res, next) {
     const authHeader = req.headers['authorization']
     const token = authHeader && authHeader.split(' ')[1]
 
-    if (token == null) return res.sendStatus(401)
-
+    if (token == null) {
+        console.log('not authorized')
+        return res.sendStatus(401)
+    }
     jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
         if (err) return res.sendStatus(403)
 
@@ -83,9 +85,16 @@ router.get('/day/:date', auth, (req, res) => {
     res.json({ ok: true, data: todayConsumption })
 })
 
-router.get('/', (req, res) => {
-    const data = db.getData('/consumption')
-    res.json({ ok: true, data })
+router.get('/meal/:meal_id', auth, (req, res) => {
+    const userId = req.user;
+    const mealId = req.params.meal_id;
+
+    const meal = db.getData('/consumption/' + userId).filter(c => c.meal_id == mealId)
+
+    if (!meal) return res.json({ ok: false, msg: 'No meal found' })
+
+    return res.json({ ok: true, data: meal })
+
 })
 
 module.exports = router

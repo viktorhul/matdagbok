@@ -3,8 +3,18 @@
     <h2>Logga in</h2>
     <form>
       <p class="errorMsg" v-if="errorMsg">{{ errorMsg }}</p>
-      <input class="standardInput" type="text" v-model="username" placeholder="Användarnamn" />
-      <input class="standardInput" type="password" v-model="password" placeholder="Lösenord" />
+      <input
+        class="standardInput"
+        type="text"
+        v-model="username"
+        placeholder="Användarnamn"
+      />
+      <input
+        class="standardInput"
+        type="password"
+        v-model="password"
+        placeholder="Lösenord"
+      />
       <button class="standardButton" @click.prevent="loginUser">
         Logga in
       </button>

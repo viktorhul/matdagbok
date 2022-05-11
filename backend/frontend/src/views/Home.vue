@@ -1,9 +1,12 @@
 <template>
   <div>
     <div v-if="user">
-      <router-link to="/add-meal" class="boxLink">Lägg till måltid</router-link>
+      <router-link to="/add-meal" class="boxLink boxLink-big"
+        >Lägg till måltid</router-link
+      >
       <div class="content">
         <div v-for="meal in meals" :key="meal.meal_id" class="vertical-margin">
+          <!-- TODO: Update meals @click="openMeal(meal.meal_id)" -->
           <h2>
             {{ meal.meal_name }}
             <span class="boxInfo"
@@ -67,10 +70,14 @@ export default {
     }),
   },
   methods: {
+    openMeal(id) {
+      this.$router.push("/add-meal/" + id);
+    },
     fetchConsumption() {
       const date = new Date();
       fetch(
-        `https://mat.hultsten.eu/consumption/day/${date.getFullYear()}-${date.getMonth() + 1
+        `https://mat.hultsten.eu/consumption/day/${date.getFullYear()}-${
+          date.getMonth() + 1
         }-${date.getDate()}`,
         {
           headers: {
@@ -91,7 +98,8 @@ export default {
 </script>
 
 <style scoped>
-.content {}
+.content {
+}
 
 .ingredientTable {
   width: 100%;

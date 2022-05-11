@@ -39,12 +39,21 @@ h2 {
 
 .boxLink {
   display: inline-block;
-  padding: 10px;
   margin: 5px;
   border-radius: 5px;
   background: lightgrey;
   color: rgb(52, 52, 52);
   text-decoration: none;
+}
+
+.boxLink-big {
+  padding: 10px;
+  font-size: 1em;
+}
+
+.boxLink-small {
+  padding: 5px;
+  font-size: 0.5em;
 }
 
 .boxLink-primary {
@@ -55,6 +64,11 @@ h2 {
 .boxLink-secondary {
   background: rgb(168, 187, 250);
   color: rgb(22, 22, 186);
+}
+
+.boxLink-warning {
+  background: rgb(247, 132, 132);
+  color: rgb(129, 26, 26);
 }
 
 .boxLink:hover {

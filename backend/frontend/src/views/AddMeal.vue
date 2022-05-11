@@ -1,20 +1,43 @@
 <template>
   <div>
-    <h2 @click="printIngredients">Ny måltid</h2>
+    <h2 @click="printTest">
+      {{ newMeal ? "Ny måltid" : "Ändra måltid" }}
+    </h2>
     <div v-if="mealAdded">
       <p>Måltiden inlagd!</p>
-      <span class="boxLink boxLink-primary" @click="this.$router.push('/')">Gå till startsidan</span>
-      <span class="boxLink boxLink-secondary" @click="resetForm">Lägg till ny</span>
+      <span
+        class="boxLink boxLink-primary boxLink-big"
+        @click="this.$router.push('/')"
+        >Gå till startsidan</span
+      >
+      <span class="boxLink boxLink-secondary boxLink-big" @click="resetForm"
+        >Lägg till ny</span
+      >
     </div>
     <div v-else>
-      <span class="boxLink boxLink-secondary" @click="addMeal">Lägg till måltiden</span>
+      <span class="boxLink boxLink-secondary boxLink-big" @click="addMeal">{{
+        newMeal ? "Lägg till måltiden" : "Uppdatera måltiden"
+      }}</span>
       <p>Kalorier totalt: {{ totalCalories }}</p>
-      <input class="standardInput vertical-margin" type="text" v-model="mealName"
-        placeholder="Ge måltiden ett namn..." />
-      <IngredientForm v-for="ingredient in ingredients" :key="ingredient.name" :info="ingredient"
-        :database="databaseIngredients" @updateInfo="updateIngredient" />
-      <span class="boxLink boxLink-primary" @click="ingredients.push({ id: ingredients.length, name: '' })">+ Lägg till
-        rad</span>
+      <input
+        class="standardInput vertical-margin"
+        type="text"
+        v-model="mealName"
+        placeholder="Ge måltiden ett namn..."
+      />
+      <IngredientForm
+        v-for="ingredient in ingredients"
+        :key="ingredient.name"
+        :info="ingredient"
+        :database="databaseIngredients"
+        @updateInfo="updateIngredient"
+        @removeIngredient="removeIngredient"
+      />
+      <span
+        class="boxLink boxLink-primary boxLink-big"
+        @click="ingredients.push({ id: ingredients.length, name: '' })"
+        >+ Lägg till rad</span
+      >
     </div>
   </div>
 </template>
@@ -26,6 +49,7 @@ import IngredientForm from "@/components/IngredientForm";
 export default {
   data() {
     return {
+      newMeal: true,
       mealName: "",
       ingredients: [{ id: 0, name: "" }],
       databaseIngredients: [],
@@ -33,6 +57,30 @@ export default {
     };
   },
   created() {
+    // TODO: Update meals
+    /*
+    if (this.$route.params.id) {
+      // Modify existing meal
+      this.newMeal = false;
+      fetch("https://mat.hultsten.eu/consumption/meal/" + this.$route.params.id, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + this.user.token,
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.ok) {
+            this.ingredients = data.data[0].ingredients.map((i, index) => ({
+              ...i,
+              id: index,
+            }));
+          }
+        });
+    } else {
+      // New meal
+    }*/
+
     fetch("https://mat.hultsten.eu/ingredients")
       .then((res) => res.json())
       .then((data) => {
@@ -62,7 +110,14 @@ export default {
     IngredientForm,
   },
   methods: {
+    printTest() {
+      console.log(...this.ingredients);
+    },
+    removeIngredient(ingredient) {
+      this.ingredients = this.ingredients.filter((i) => i.id != ingredient.id);
+    },
     resetForm() {
+      this.mealName = "";
       this.ingredients = [{ id: 0, name: "" }];
       this.mealAdded = false;
     },
@@ -100,7 +155,7 @@ export default {
           Authorization: "Bearer " + this.user.token,
         },
         body: JSON.stringify({
-          meal_name: this.mealName,
+          meal_name: this.mealName || "Måltid",
           consumption: uploadIngredients,
         }),
       })

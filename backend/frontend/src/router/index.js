@@ -14,7 +14,7 @@ const routes = [
     component: LoginView
   },
   {
-    path: '/add-meal',
+    path: '/add-meal/:id?',
     component: AddMeal
   }
 ]

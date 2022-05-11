@@ -1,5 +1,14 @@
 <template>
-  <div class="wrapper" @change="$emit('updateInfo', ingredient)">
+  <div
+    class="wrapper"
+    @change="$emit('updateInfo', ingredient)"
+    @click="printTest"
+  >
+    <span
+      class="boxLink boxLink-warning boxLink-small"
+      @click="$emit('removeIngredient', ingredient)"
+      >Ta bort</span
+    >
     <input
       v-model="ingredient.name"
       autocomplete="off"
@@ -61,40 +70,6 @@
               />
             </td>
           </tr>
-          <!--
-          <tr>
-            <td><span class="inputHeader">Protein per 100g</span></td>
-            <td>
-              <input
-                class="ingredientInfoInput"
-                type="text"
-                placeholder="Ange andel protein"
-                v-model="ingredient.protein"
-              />
-            </td>
-          </tr>
-          <tr>
-            <td><span class="inputHeader">Fett per 100g</span></td>
-            <td>
-              <input
-                class="ingredientInfoInput"
-                type="text"
-                placeholder="Ange andel fett"
-                v-model="ingredient.fat"
-              />
-            </td>
-          </tr>
-          <tr>
-            <td><span class="inputHeader">Kolhydrater per 100g</span></td>
-            <td>
-              <input
-                class="ingredientInfoInput"
-                type="text"
-                placeholder="Ange andel kolhydrater"
-                v-model="ingredient.carbon"
-              />
-            </td>
-          </tr>-->
         </tbody>
       </table>
     </div>
@@ -103,16 +78,21 @@
 
 <script>
 export default {
-  emits: ["updateInfo"],
+  emits: ["updateInfo", "removeIngredient"],
   props: {
     info: Object,
     database: Array,
   },
-  created() {
+  mounted() {
     this.ingredient.id = this.info.id;
     this.ingredient.name = this.info.name;
 
+    this.ingredient.amount = this.info.amount || "";
+    this.ingredient.calories = this.info.energy || "";
+
     this.updateIngredientInfo();
+
+    setInterval(() => this.updateIngredientInfo(), 500);
   },
   data() {
     return {
@@ -130,11 +110,13 @@ export default {
     };
   },
   methods: {
+    printTest() {
+      console.log(this.ingredient.calories);
+    },
     updateIngredientInfo() {
       const ingredient = this.database.find(
         (i) => i.name.toLowerCase() == this.ingredient.name.toLowerCase()
       );
-
       if (ingredient) {
         // Get additional information
         this.ingredient.predefined = true;
