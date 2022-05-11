@@ -5,7 +5,13 @@
       <div class="content">
         <div v-for="meal in meals" :key="meal.meal_id" class="vertical-margin">
           <h2>
-            {{ meal.meal_name }} <span class="boxInfo">523 kalorier</span>
+            {{ meal.meal_name }}
+            <span class="boxInfo"
+              >{{
+                meal.ingredients.reduce((acc, ing) => acc + ing.energy, 0)
+              }}
+              kalorier</span
+            >
           </h2>
           <table class="ingredientTable">
             <thead>
