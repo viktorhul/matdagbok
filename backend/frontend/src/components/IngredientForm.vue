@@ -1,22 +1,42 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper" @change="$emit('updateInfo', ingredient)">
     <input
       v-model="ingredient.name"
       autocomplete="off"
       list="ingredients"
       placeholder="Ange ingrediens"
       class="ingredient"
+      type="text"
       @change="updateIngredientInfo"
+      @keyup="updateIngredientInfo"
     />
     <datalist id="ingredients">
       <option
-        v-for="ingredient in ingredients"
+        v-for="ingredient in database"
         :key="ingredient.name"
         :value="ingredient.name"
       />
     </datalist>
     <div v-if="ingredient.name" class="ingredientInfo">
-      <p v-if="!ingredient.predefined">Ny ingrediens</p>
+      <p v-if="!ingredient.predefined" class="boxInfo boxInfo-primary">
+        Ny ingrediens
+      </p>
+      <div
+        v-if="!ingredient.predefined"
+        class="boxInfo boxInfo-primary boxCheck"
+        :class="{
+          'boxCheck-active': ingredient.addTemplate,
+          'boxCheck-inactive': !ingredient.addTemplate,
+        }"
+      >
+        <input
+          type="checkbox"
+          v-model="ingredient.addTemplate"
+          name=""
+          :id="'checkbox' + ingredient.id"
+          value="wow"
+        /><label :for="'checkbox' + ingredient.id">Lägg till mall</label>
+      </div>
       <table class="ingredientTable">
         <tbody>
           <tr>
@@ -41,6 +61,7 @@
               />
             </td>
           </tr>
+          <!--
           <tr>
             <td><span class="inputHeader">Protein per 100g</span></td>
             <td>
@@ -73,7 +94,7 @@
                 v-model="ingredient.carbon"
               />
             </td>
-          </tr>
+          </tr>-->
         </tbody>
       </table>
     </div>
@@ -82,13 +103,23 @@
 
 <script>
 export default {
+  emits: ["updateInfo"],
   props: {
     info: Object,
+    database: Array,
+  },
+  created() {
+    this.ingredient.id = this.info.id;
+    this.ingredient.name = this.info.name;
+
+    this.updateIngredientInfo();
   },
   data() {
     return {
       ingredient: {
+        addTemplate: false,
         predefined: false,
+        id: 0,
         name: "",
         amount: "",
         calories: "",
@@ -96,36 +127,19 @@ export default {
         fat: "",
         carbon: "",
       },
-      predefinedIngredient: null,
-      ingredients: [
-        {
-          name: "Tonfisk",
-          calories: 100,
-        },
-        {
-          name: "Smör",
-          calories: 600,
-        },
-        {
-          name: "Salladsost",
-          calories: 214,
-        },
-      ],
     };
   },
   methods: {
     updateIngredientInfo() {
-      const ingredient = this.ingredients.find(
+      const ingredient = this.database.find(
         (i) => i.name.toLowerCase() == this.ingredient.name.toLowerCase()
       );
 
       if (ingredient) {
         // Get additional information
-        this.ingredient = {
-          predefined: true,
-          name: ingredient.name,
-          calories: ingredient.calories,
-        };
+        this.ingredient.predefined = true;
+        this.ingredient.name = ingredient.name;
+        this.ingredient.calories = ingredient.calories;
       } else {
         // Custom ingredient
         this.ingredient.predefined = false;
@@ -168,7 +182,32 @@ export default {
 }
 
 .ingredientInfoInput {
-  padding: 5px;
+  width: 100%;
+  padding: 10px;
   margin: 5px 0;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+}
+
+.boxCheck {
+  display: inline-flex;
+  align-items: center;
+}
+
+.boxCheck input {
+  margin-right: 5px;
+}
+
+.boxCheck-active {
+  background-color: rgb(88, 215, 88);
+  color: rgb(12, 56, 12);
+  border: 1px solid rgb(12, 56, 12);
+}
+
+.boxCheck-inactive {
+  background-color: rgb(247, 137, 137);
+  color: rgb(74, 21, 21);
+  border: 1px solid rgb(74, 21, 21);
 }
 </style>

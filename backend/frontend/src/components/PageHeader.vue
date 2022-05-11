@@ -2,21 +2,30 @@
   <div class="wrapper">
     <router-link to="/" class="wrapperChild header">Matdagboken</router-link>
     <div class="wrapperChild userInfo">
-      <div v-if="!user">
+      <div v-if="user">
+        {{ user.username }}
+        <span
+          @click="
+            this.$store.commit('logoutUser');
+            this.$router.push('/');
+          "
+          >Logga ut</span
+        >
+      </div>
+      <div v-else>
         <router-link to="/login">Logga in</router-link>
       </div>
-      <div v-else>Inloggad</div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
-  data() {
-    return {
-      user: null,
-    };
-  },
+  computed: mapGetters({
+    user: "currentUser",
+  }),
 };
 </script>
 

@@ -1,53 +1,84 @@
 const { JsonDB } = require('node-json-db')
 const { Config } = require('node-json-db/dist/lib/JsonDBConfig')
 
+const jwt = require('jsonwebtoken')
+const dotenv = require('dotenv')
+dotenv.config()
+
 const express = require('express')
 const router = express.Router()
 
 const db = new JsonDB(new Config("db", true, false, '/'))
 
-function addConsumption(consumption) {
-    const { name, amount } = consumption
+function auth(req, res, next) {
+    const authHeader = req.headers['authorization']
+    const token = authHeader && authHeader.split(' ')[1]
 
-    if (!name) return { ok: false, msg: 'Name missing on ingredient' }
-    if (!amount) return { ok: false, msg: 'Amount missing on ingredient' }
+    if (token == null) return res.sendStatus(401)
 
-    const dbIngredient = db.getData('/ingredients').find(i => i.name.toLowerCase() == name.toLowerCase())
+    jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
+        if (err) return res.sendStatus(403)
 
-    const energy = dbIngredient.energy * amount / 100
+        req.user = user
+        next()
+    })
+}
 
-    const date = new Date()
+function addConsumption(consumption, mealName, userId) {
+    //const { name, amount, calories } = consumption
+
+    //if (!name) return { ok: false, msg: 'Name missing on ingredient' }
+    //if (!amount) return { ok: false, msg: 'Amount missing on ingredient' }
+
+    //const dbIngredient = db.getData('/ingredients').find(i => i.name.toLowerCase() == name.toLowerCase())
+
+    const dateObj = new Date()
+    const date = [
+        dateObj.getFullYear(),
+        dateObj.getMonth() + 1,
+        dateObj.getDate()
+    ]
+
+    const mappedConsumption = consumption.map(ingr => {
+        const energy = Math.round(ingr.calories * ingr.amount / 100)
+        return { name: ingr.name, amount: ingr.amount, energy }
+    })
+
     const data = {
-        date: [
-            date.getFullYear(),
-            date.getMonth(),
-            date.getDay()
-        ],
-        name: dbIngredient.name,
-        energy
+        meal_name: mealName,
+        meal_id: dateObj.getTime(),
+        date,
+        ingredients: mappedConsumption
     }
 
-    db.push('/consumption', [data], false)
+    db.push('/consumption/' + userId, [data], false)
 
     return { ok: true }
 }
 
-router.post('/add', (req, res) => {
+router.post('/add', auth, (req, res) => {
     const consumption = req.body.consumption
+    const mealName = req.body.meal_name;
+    const userId = req.user;
 
-    if (Array.isArray(consumption)) {
-        consumption.forEach(i => addConsumption(i))
+    addConsumption(consumption, mealName, userId)
+    /*if (Array.isArray(consumption)) {
+        consumption.forEach(i => addConsumption(i, mealName, userId))
     } else {
-        addConsumption(consumption)
-    }
+    }*/
 
     res.json({ ok: true })
 })
 
-router.get('/day/:year/:month/:day', (req, res) => {
-    const { year, month, day } = req.params
+router.get('/day/:date', auth, (req, res) => {
+    const userId = req.user
+    const [year, month, day] = req.params.date.split('-')
 
-    const todayConsumption = db.getData('/consumption').filter(c => c.date[0] == year && c.date[1] == month && c.date[2] == day)
+    const userConsumption = db.getData('/consumption')
+
+    if (!userConsumption[userId]) return res.json({ ok: true, data: [] })
+
+    const todayConsumption = userConsumption[userId].filter(c => c.date[0] == year && c.date[1] == month && c.date[2] == day)
 
     res.json({ ok: true, data: todayConsumption })
 })
