@@ -70,8 +70,7 @@ export default {
     fetchConsumption() {
       const date = new Date();
       fetch(
-        `http://192.168.1.9:3000/consumption/day/${date.getFullYear()}-${
-          date.getMonth() + 1
+        `https://mat.hultsten.eu/consumption/day/${date.getFullYear()}-${date.getMonth() + 1
         }-${date.getDate()}`,
         {
           headers: {
@@ -92,8 +91,7 @@ export default {
 </script>
 
 <style scoped>
-.content {
-}
+.content {}
 
 .ingredientTable {
   width: 100%;

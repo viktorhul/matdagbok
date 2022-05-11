@@ -3,18 +3,8 @@
     <h2>Logga in</h2>
     <form>
       <p class="errorMsg" v-if="errorMsg">{{ errorMsg }}</p>
-      <input
-        class="standardInput"
-        type="text"
-        v-model="username"
-        placeholder="Användarnamn"
-      />
-      <input
-        class="standardInput"
-        type="password"
-        v-model="password"
-        placeholder="Lösenord"
-      />
+      <input class="standardInput" type="text" v-model="username" placeholder="Användarnamn" />
+      <input class="standardInput" type="password" v-model="password" placeholder="Lösenord" />
       <button class="standardButton" @click.prevent="loginUser">
         Logga in
       </button>
@@ -38,7 +28,7 @@ export default {
   }),
   methods: {
     loginUser() {
-      fetch("http://192.168.1.9:3000/auth/login", {
+      fetch("https://mat.hultsten.eu/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

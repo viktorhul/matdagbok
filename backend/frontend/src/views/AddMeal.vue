@@ -3,36 +3,18 @@
     <h2 @click="printIngredients">Ny måltid</h2>
     <div v-if="mealAdded">
       <p>Måltiden inlagd!</p>
-      <span class="boxLink boxLink-primary" @click="this.$router.push('/')"
-        >Gå till startsidan</span
-      >
-      <span class="boxLink boxLink-secondary" @click="resetForm"
-        >Lägg till ny</span
-      >
+      <span class="boxLink boxLink-primary" @click="this.$router.push('/')">Gå till startsidan</span>
+      <span class="boxLink boxLink-secondary" @click="resetForm">Lägg till ny</span>
     </div>
     <div v-else>
-      <span class="boxLink boxLink-secondary" @click="addMeal"
-        >Lägg till måltiden</span
-      >
+      <span class="boxLink boxLink-secondary" @click="addMeal">Lägg till måltiden</span>
       <p>Kalorier totalt: {{ totalCalories }}</p>
-      <input
-        class="standardInput vertical-margin"
-        type="text"
-        v-model="mealName"
-        placeholder="Ge måltiden ett namn..."
-      />
-      <IngredientForm
-        v-for="ingredient in ingredients"
-        :key="ingredient.name"
-        :info="ingredient"
-        :database="databaseIngredients"
-        @updateInfo="updateIngredient"
-      />
-      <span
-        class="boxLink boxLink-primary"
-        @click="ingredients.push({ id: ingredients.length, name: '' })"
-        >+ Lägg till rad</span
-      >
+      <input class="standardInput vertical-margin" type="text" v-model="mealName"
+        placeholder="Ge måltiden ett namn..." />
+      <IngredientForm v-for="ingredient in ingredients" :key="ingredient.name" :info="ingredient"
+        :database="databaseIngredients" @updateInfo="updateIngredient" />
+      <span class="boxLink boxLink-primary" @click="ingredients.push({ id: ingredients.length, name: '' })">+ Lägg till
+        rad</span>
     </div>
   </div>
 </template>
@@ -51,7 +33,7 @@ export default {
     };
   },
   created() {
-    fetch("http://192.168.1.9:3000/ingredients")
+    fetch("https://mat.hultsten.eu/ingredients")
       .then((res) => res.json())
       .then((data) => {
         if (data.ok) {
@@ -100,7 +82,7 @@ export default {
 
       const addTemplates = this.ingredients.filter((i) => i.addTemplate);
 
-      fetch("http://192.168.1.9:3000/ingredients/add", {
+      fetch("https://mat.hultsten.eu/ingredients/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -111,7 +93,7 @@ export default {
         }),
       });
 
-      fetch("http://192.168.1.9:3000/consumption/add", {
+      fetch("https://mat.hultsten.eu/consumption/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
