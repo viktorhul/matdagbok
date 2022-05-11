@@ -64,7 +64,7 @@ export default {
     fetchConsumption() {
       const date = new Date();
       fetch(
-        `https://mat.hultsten.eu:3000/consumption/day/${date.getFullYear()}-${date.getMonth() + 1
+        `https://mat.hultsten.eu/consumption/day/${date.getFullYear()}-${date.getMonth() + 1
         }-${date.getDate()}`,
         {
           headers: {

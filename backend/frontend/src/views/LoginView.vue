@@ -28,7 +28,7 @@ export default {
   }),
   methods: {
     loginUser() {
-      fetch("https://mat.hultsten.eu:3000/auth/login", {
+      fetch("https://mat.hultsten.eu/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

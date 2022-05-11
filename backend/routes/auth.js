@@ -21,7 +21,7 @@ router.post('/login', (req, res) => {
 
     if (users.password != password) return res.json({ ok: false, msg: "Incorrect credentials" })
 
-    const token = jwt.sign(username, process.env.TOKEN_SECRET);
+    const token = jwt.sign(users.username, process.env.TOKEN_SECRET);
 
     return res.json({ ok: true, token, username: users.username })
 })

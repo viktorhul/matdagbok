@@ -33,7 +33,7 @@ export default {
     };
   },
   created() {
-    fetch("https://mat.hultsten.eu:3000/ingredients")
+    fetch("https://mat.hultsten.eu/ingredients")
       .then((res) => res.json())
       .then((data) => {
         if (data.ok) {
@@ -82,7 +82,7 @@ export default {
 
       const addTemplates = this.ingredients.filter((i) => i.addTemplate);
 
-      fetch("https://mat.hultsten.eu:3000/ingredients/add", {
+      fetch("https://mat.hultsten.eu/ingredients/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -93,7 +93,7 @@ export default {
         }),
       });
 
-      fetch("https://mat.hultsten.eu:3000/consumption/add", {
+      fetch("https://mat.hultsten.eu/consumption/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
