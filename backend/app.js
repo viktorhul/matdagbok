@@ -15,8 +15,6 @@ app.use('/auth', require('./routes/auth'))
 app.use('/ingredients', require('./routes/ingredients'))
 app.use('/consumption', require('./routes/consumption'))
 
-app.get('/', (req, res) => {
-    res.sendFile(path + 'index.html')
-})
+app.get(/.*/, (req, res) => res.sendFile(__dirname + '/build/index.html'))
 
 app.listen(3000, () => console.log('Running'))
