@@ -2,10 +2,13 @@ version: '3'
 
 services:
   app:
-    image: matdagbok:1.0
+    image: matdagbok:latest
     ports:
       - 3000:3000
     restart: always
     container_name: matdagbok
     volumes:
-      - ./db:/app/db
+      - ./container/db:/app/db
+      - ./container/frontend_build:/app/build
+    build:
+      context: .
