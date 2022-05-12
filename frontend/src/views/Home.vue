@@ -11,7 +11,9 @@
             {{ meal.meal_name }}
             <span class="boxInfo"
               >{{
-                meal.ingredients.reduce((acc, ing) => acc + ing.energy, 0)
+                meal.ingredients
+                  .reduce((acc, ing) => acc + ing.total_calories, 0)
+                  .toLocaleString("sv-SE")
               }}
               kalorier</span
             >
@@ -27,8 +29,8 @@
             <tbody>
               <tr v-for="ingredient in meal.ingredients" :key="ingredient.id">
                 <td>{{ ingredient.name }}</td>
-                <td>{{ ingredient.amount }}</td>
-                <td>{{ ingredient.energy }}</td>
+                <td>{{ ingredient.amount.toLocaleString("sv-SE") }}</td>
+                <td>{{ ingredient.total_calories.toLocaleString("sv-SE") }}</td>
               </tr>
             </tbody>
           </table>
@@ -76,7 +78,7 @@ export default {
     fetchConsumption() {
       const date = new Date();
       fetch(
-        `https://mat.hultsten.eu/consumption/day/${date.getFullYear()}-${
+        `http://192.168.1.9:3000/api/consumption/day/${date.getFullYear()}-${
           date.getMonth() + 1
         }-${date.getDate()}`,
         {
@@ -90,6 +92,7 @@ export default {
         .then((data) => {
           if (data.ok) {
             this.meals = data.data;
+            console.log(this.meals);
           }
         });
     },

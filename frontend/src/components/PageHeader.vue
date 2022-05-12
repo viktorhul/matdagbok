@@ -12,7 +12,7 @@
           >Logga ut</span
         >
       </div>
-      <div v-else>
+      <div class="wrapperChild userInfo" v-else>
         <router-link to="/login">Logga in</router-link>
       </div>
     </div>
@@ -42,6 +42,16 @@ export default {
 
 .wrapperChild {
   padding: 0 10px;
+}
+
+.wrapperChild a {
+  display: inline-block;
+}
+
+.wrapperChild a + a {
+  margin-left: 10px;
+  padding-left: 10px;
+  border-left: 1px solid white;
 }
 
 .header {

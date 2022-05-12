@@ -118,6 +118,15 @@ h2 {
   color: rgb(21, 71, 20);
 }
 
+.standardButton-secondary {
+  background: rgb(168, 187, 250) !important;
+  color: rgb(22, 22, 186) !important;
+}
+
+.errorMsg {
+  color: red;
+}
+
 .vertical-margin {
   margin: 10px 0;
 }

@@ -1,29 +1,36 @@
-const { JsonDB } = require('node-json-db')
-const { Config } = require('node-json-db/dist/lib/JsonDBConfig')
-
-const jwt = require('jsonwebtoken')
-const dotenv = require('dotenv')
-dotenv.config()
+const { sign } = require('../helpers/auth')
+const mysql = require('../helpers/mysql')
 
 const express = require('express')
 const router = express.Router()
 
-const db = new JsonDB(new Config("db/db", true, true, '/'))
+router.post('/create-user', async (req, res) => {
+    const username = req.body.username?.toLowerCase()
+    const password = req.body.password
 
-router.post('/login', (req, res) => {
-    const { username, password } = req.body
+    if (!username || !password || username == "" || password == "") {
+        return res.json({ ok: false, msg: "Användarnamn och lösenord måste anges" })
+    }
 
-    if (!username || !password) return res.json({ ok: false, msg: "username and password must be non-empty" })
+    const createdUser = await mysql.createUser({ username, password })
 
-    const users = db.getData('/users').find(u => u.username.toLowerCase() == username.toLowerCase())
+    return res.json({ ok: createdUser })
+})
 
-    if (!users) return res.json({ ok: false, msg: "Incorrect credentials" })
+router.post('/login', async (req, res) => {
+    const username = req.body.username?.toLowerCase()
+    const password = req.body.password
 
-    if (users.password != password) return res.json({ ok: false, msg: "Incorrect credentials" })
+    if (!username || !password) return res.json({ ok: false, msg: "Användarnamn och lösenord måste anges" })
 
-    const token = jwt.sign(users.username, process.env.TOKEN_SECRET);
+    const validation = await mysql.validateUser(username, password)
 
-    return res.json({ ok: true, token, username: users.username })
+    if (validation.status) {
+        const token = sign(validation.user_id)
+        return res.json({ ok: true, token, username })
+    } else {
+        return res.status(401).json({ ok: false })
+    }
 })
 
 module.exports = router

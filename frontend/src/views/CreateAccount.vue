@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h2>Logga in</h2>
-    <form>
+    <h2>Skapa konto</h2>
+    <div v-if="!userCreated">
       <p class="errorMsg" v-if="errorMsg">{{ errorMsg }}</p>
       <input
         class="standardInput"
@@ -15,36 +15,39 @@
         v-model="password"
         placeholder="Lösenord"
       />
-      <button class="standardButton" @click.prevent="loginUser">
-        Logga in
-      </button>
-      <button
-        class="standardButton standardButton-secondary"
-        @click.prevent="this.$router.push('/create-account')"
-      >
+      <button class="standardButton" @click.prevent="createUser">
         Skapa konto
       </button>
-    </form>
+    </div>
+    <div v-else>
+      <p>Kontot har skapats!</p>
+      <router-link to="/login" class="boxLink boxLink-big boxLink-primary"
+        >Logga in</router-link
+      >
+    </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-
 export default {
   data() {
     return {
-      errorMsg: null,
+      userCreated: false,
+      errorMsg: "",
       username: "",
       password: "",
     };
   },
-  computed: mapGetters({
-    user: "currentUser",
-  }),
   methods: {
-    loginUser() {
-      fetch("http://192.168.1.9:3000/api/auth/login", {
+    createUser() {
+      this.errorMsg = "";
+
+      if (this.username == "" || this.password == "") {
+        this.errorMsg = "Du måste ha ett användarnamn och lösenord";
+        return;
+      }
+
+      fetch("http://192.168.1.9:3000/api/auth/create-user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -57,23 +60,13 @@ export default {
         .then((res) => res.json())
         .then((data) => {
           if (data.ok) {
-            const user = {
-              token: data.token,
-              username: data.username,
-            };
-            this.$store.commit("loginUser", user);
-            this.$router.push("/");
-          } else {
-            this.errorMsg = data.msg;
+            this.userCreated = true;
           }
-        })
-        .catch((err) => {
-          this.errorMsg = "Något gick fel :( Meddelande: " + err;
         });
     },
   },
 };
 </script>
 
-<style scoped>
+<style>
 </style>

@@ -62,7 +62,7 @@ export default {
     if (this.$route.params.id) {
       // Modify existing meal
       this.newMeal = false;
-      fetch("https://mat.hultsten.eu/consumption/meal/" + this.$route.params.id, {
+      fetch("http://192.168.1.9:3000/api/consumption/meal/" + this.$route.params.id, {
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + this.user.token,
@@ -81,7 +81,7 @@ export default {
       // New meal
     }*/
 
-    fetch("https://mat.hultsten.eu/ingredients")
+    fetch("http://192.168.1.9:3000/api/ingredients")
       .then((res) => res.json())
       .then((data) => {
         if (data.ok) {
@@ -137,7 +137,7 @@ export default {
 
       const addTemplates = this.ingredients.filter((i) => i.addTemplate);
 
-      fetch("https://mat.hultsten.eu/ingredients/add", {
+      fetch("http://192.168.1.9:3000/api/ingredients/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -148,7 +148,7 @@ export default {
         }),
       });
 
-      fetch("https://mat.hultsten.eu/consumption/add", {
+      fetch("http://192.168.1.9:3000/api/consumption/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

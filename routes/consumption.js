@@ -1,100 +1,53 @@
-const { JsonDB } = require('node-json-db')
-const { Config } = require('node-json-db/dist/lib/JsonDBConfig')
-
-const jwt = require('jsonwebtoken')
-const dotenv = require('dotenv')
-dotenv.config()
+const { auth } = require('../helpers/auth')
+const mysql = require('../helpers/mysql')
 
 const express = require('express')
 const router = express.Router()
 
-const db = new JsonDB(new Config("db/db", true, true, '/'))
-
-function auth(req, res, next) {
-    const authHeader = req.headers['authorization']
-    const token = authHeader && authHeader.split(' ')[1]
-
-    if (token == null) {
-        console.log('not authorized')
-        return res.sendStatus(401)
-    }
-    jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
-        if (err) return res.sendStatus(403)
-
-        req.user = user
-        next()
-    })
-}
-
-function addConsumption(consumption, mealName, userId) {
-    //const { name, amount, calories } = consumption
-
-    //if (!name) return { ok: false, msg: 'Name missing on ingredient' }
-    //if (!amount) return { ok: false, msg: 'Amount missing on ingredient' }
-
-    //const dbIngredient = db.getData('/ingredients').find(i => i.name.toLowerCase() == name.toLowerCase())
-
-    const dateObj = new Date()
-    const date = [
-        dateObj.getFullYear(),
-        dateObj.getMonth() + 1,
-        dateObj.getDate()
-    ]
-
-    const mappedConsumption = consumption.map(ingr => {
-        const energy = Math.round(ingr.calories * ingr.amount / 100)
-        return { name: ingr.name, amount: ingr.amount, energy }
-    })
-
-    const data = {
-        meal_name: mealName,
-        meal_id: dateObj.getTime(),
-        date,
-        ingredients: mappedConsumption
+router.post('/add', auth, async (req, res) => {
+    if (!req.body.consumption || !Array.isArray(req.body.consumption) || req.body.consumption.length == 0) {
+        return res.json({ ok: false, msg: "[consumption] must be set and be a non-empty array" })
     }
 
-    db.push('/consumption/' + userId, [data], false)
-
-    return { ok: true }
-}
-
-router.post('/add', auth, (req, res) => {
-    const consumption = req.body.consumption
-    const mealName = req.body.meal_name;
+    const consumption = req.body.consumption.filter(c => c.name != "" && c.amount > 0 && c.calories > 0).map(c => [c.name, c.amount, c.calories])
+    const mealName = req.body.meal_name || "Måltid";
     const userId = req.user;
 
-    addConsumption(consumption, mealName, userId)
-    /*if (Array.isArray(consumption)) {
-        consumption.forEach(i => addConsumption(i, mealName, userId))
-    } else {
-    }*/
+    const result = await mysql.addMeal(mealName, userId, consumption)
 
-    res.json({ ok: true })
+    res.json({ ok: result.status })
 })
 
-router.get('/day/:date', auth, (req, res) => {
+router.get('/day/:date', auth, async (req, res) => {
     const userId = req.user
     const [year, month, day] = req.params.date.split('-')
 
-    const userConsumption = db.getData('/consumption')
+    const regDate = req.params.date || null;
 
-    if (!userConsumption[userId]) return res.json({ ok: true, data: [] })
+    if (!regDate) {
+        return res.json({ ok: false, msg: "[date] must be set" })
+    }
 
-    const todayConsumption = userConsumption[userId].filter(c => c.date[0] == year && c.date[1] == month && c.date[2] == day)
+    const result = await mysql.getConsumptionFromDay(userId, regDate)
 
-    res.json({ ok: true, data: todayConsumption })
+    return res.json({ ok: true, data: result.data })
 })
 
-router.get('/meal/:meal_id', auth, (req, res) => {
+router.get('/meal/:meal_id', auth, async (req, res) => {
     const userId = req.user;
-    const mealId = req.params.meal_id;
+    const mealId = req.params.meal_id || null;
 
-    const meal = db.getData('/consumption/' + userId).filter(c => c.meal_id == mealId)
+    if (!mealId) {
+        return res.json({ ok: false, msg: "[mealId] must be set and be valid" })
+    }
 
-    if (!meal) return res.json({ ok: false, msg: 'No meal found' })
+    const result = await mysql.getMeal(mealId, userId)
 
-    return res.json({ ok: true, data: meal })
+    if (!result.status) {
+        return res.json({ ok: false, msg: result.msg })
+    }
 
+    return res.json({ ok: true, data: result.data })
 })
 
 module.exports = router
