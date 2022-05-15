@@ -1,18 +1,21 @@
 <template>
   <div>
     <h1 class="pageHeader">Logga in</h1>
+    <p class="error" v-if="error">{{ error }}</p>
     <form>
       <input
         class="inputText"
         type="text"
-        v-model="username"
+        v-model="username.value"
         placeholder="Användarnamn"
+        :class="{ errorInput: username.error }"
       />
       <input
         class="inputText"
         type="password"
-        v-model="password"
+        v-model="password.value"
         placeholder="Lösenord"
+        :class="{ errorInput: password.error }"
       />
       <button class="loginButton" @click.prevent="loginUser">Logga in</button>
     </form>
@@ -23,13 +26,55 @@
 export default {
   data() {
     return {
-      username: "",
-      password: "",
+      error: "",
+      username: {
+        error: false,
+        value: "",
+      },
+      password: {
+        error: false,
+        value: "",
+      },
     };
   },
   methods: {
     loginUser() {
-      console.log("login:", this.username, this.password);
+      this.error = false;
+
+      this.username.error = !this.username.value;
+      this.password.error = !this.password.value;
+
+      if (this.username.error || this.password.error) {
+        this.error = "Ange både användarnamn och lösenord";
+        return;
+      }
+
+      fetch("http://localhost:3000/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: this.username.value,
+          password: this.password.value,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.ok) {
+            this.$store.commit("loginUser", {
+              token: data.token,
+              username: data.username,
+            });
+            this.$router.push("/");
+          } else {
+            this.error = "Felaktiga inloggningsuppgifter";
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          this.error = "Fel på servern";
+        });
     },
   },
 };
@@ -61,5 +106,14 @@ form {
   background-color: #6591fc;
   color: #fff;
   font-weight: bold;
+}
+
+.errorInput {
+  border-bottom: 2px solid #e31b1b !important;
+}
+
+.errorInput::placeholder,
+.error {
+  color: #e31b1b;
 }
 </style>

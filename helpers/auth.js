@@ -3,11 +3,13 @@ const dotenv = require('dotenv')
 dotenv.config()
 
 function auth(req, res, next) {
-    const token = req.headers['authorization']?.split(' ')[1]
+    let token = req.headers['authorization']
 
     if (!token) {
         return res.sendStatus(403)
     }
+
+    token = token.split(' ')[1]
 
     jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
         if (err) return res.sendStatus(403)

@@ -1,11 +1,16 @@
 <template>
   <div v-if="user" class="home">
     <h1 class="pageHeader">Dagens måltider</h1>
-    <div class="mealCard" v-for="meal in meals" :key="meal.id">
+    <div class="mealCard" v-for="meal in meals" :key="meal.meal_id">
       <h2>
         <span class="mealInfo">
-          {{ meal.name }}
-          <span class="calories">{{ meal.totalCalories }} kalorier</span>
+          {{ meal.meal_name }}
+          <span class="calories"
+            >{{
+              meal.ingredients.reduce((acc, ing) => acc + ing.total_calories, 0)
+            }}
+            kalorier</span
+          >
         </span>
         <span class="headerIcons">
           <i @click="editMeal(meal.id)" class="editIcon"></i>
@@ -28,7 +33,7 @@
           <tr v-for="ingredient in meal.ingredients" :key="ingredient.id">
             <td>{{ ingredient.name }}</td>
             <td>{{ ingredient.amount }}</td>
-            <td>{{ ingredient.calories }}</td>
+            <td>{{ ingredient.total_calories }}</td>
           </tr>
         </tbody>
       </table>
@@ -50,7 +55,7 @@ export default {
     return {
       meals: [
         {
-          id: 1,
+          meal_id: 1,
           name: "Frukost",
           totalCalories: 438,
           ingredients: [
@@ -75,7 +80,7 @@ export default {
           ],
         },
         {
-          id: 2,
+          meal_id: 2,
           name: "Lunch",
           totalCalories: 753,
           ingredients: [
@@ -101,6 +106,21 @@ export default {
         },
       ],
     };
+  },
+  created() {
+    //const date = new Date()
+    fetch("http://localhost:3000/api/consumption/day/2022-05-15", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + this.user.token,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.ok) {
+          this.meals = data.data;
+        }
+      });
   },
   methods: {
     editMeal(mealId) {

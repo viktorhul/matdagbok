@@ -4,6 +4,8 @@ import AddMeal from '@/views/AddMeal.vue'
 import LoginView from '@/views/LoginView.vue'
 import CreateAccount from '@/views/CreateAccount.vue'
 
+import store from '../store'
+
 const routes = [
   {
     path: '/',
@@ -14,17 +16,33 @@ const routes = [
     path: '/add-meal',
     name: 'addMeal',
     component: AddMeal,
+    beforeEnter: (_to, _from, next) => {
+      const user = store.getters['currentUser']
+      console.log(user)
+      if (user) next()
+      else next({ path: '/login' })
+    }
   },
   {
     path: '/login',
     name: 'login',
-    component: LoginView
+    component: LoginView,
+    beforeEnter: (_to, _from, next) => {
+      const user = store.getters['currentUser']
+      if (user) next({ path: '/' })
+      else next()
+    }
   },
   {
     path: '/create-account',
     name: 'createAccount',
-    component: CreateAccount
-  }
+    component: CreateAccount,
+    beforeEnter: (_to, _from, next) => {
+      const user = store.getters['currentUser']
+      if (user) next({ path: '/' })
+      else next()
+    }
+  },
 ]
 
 const router = createRouter({

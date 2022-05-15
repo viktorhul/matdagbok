@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt')
 const config = {
     host: "192.168.1.14",
     user: "root",
-    password: "pass",
+    password: "letmein",
     database: "matdagbok"
 }
 

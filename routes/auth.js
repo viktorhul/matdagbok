@@ -5,12 +5,14 @@ const express = require('express')
 const router = express.Router()
 
 router.post('/create-user', async (req, res) => {
-    const username = req.body.username?.toLowerCase()
+    let username = req.body.username
     const password = req.body.password
 
     if (!username || !password || username == "" || password == "") {
         return res.json({ ok: false, msg: "Användarnamn och lösenord måste anges" })
     }
+
+    username = username.toString().toLowerCase()
 
     const createdUser = await mysql.createUser({ username, password })
 
@@ -18,10 +20,12 @@ router.post('/create-user', async (req, res) => {
 })
 
 router.post('/login', async (req, res) => {
-    const username = req.body.username?.toLowerCase()
+    let username = req.body.username
     const password = req.body.password
 
     if (!username || !password) return res.json({ ok: false, msg: "Användarnamn och lösenord måste anges" })
+
+    username = username.toString().toLowerCase()
 
     const validation = await mysql.validateUser(username, password)
 
