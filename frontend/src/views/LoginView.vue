@@ -1,79 +1,65 @@
 <template>
   <div>
-    <h2>Logga in</h2>
+    <h1 class="pageHeader">Logga in</h1>
     <form>
-      <p class="errorMsg" v-if="errorMsg">{{ errorMsg }}</p>
       <input
-        class="standardInput"
+        class="inputText"
         type="text"
         v-model="username"
         placeholder="Användarnamn"
       />
       <input
-        class="standardInput"
+        class="inputText"
         type="password"
         v-model="password"
         placeholder="Lösenord"
       />
-      <button class="standardButton" @click.prevent="loginUser">
-        Logga in
-      </button>
-      <button
-        class="standardButton standardButton-secondary"
-        @click.prevent="this.$router.push('/create-account')"
-      >
-        Skapa konto
-      </button>
+      <button class="loginButton" @click.prevent="loginUser">Logga in</button>
     </form>
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-
 export default {
   data() {
     return {
-      errorMsg: null,
       username: "",
       password: "",
     };
   },
-  computed: mapGetters({
-    user: "currentUser",
-  }),
   methods: {
     loginUser() {
-      fetch("http://192.168.1.9:3000/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: this.username,
-          password: this.password,
-        }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.ok) {
-            const user = {
-              token: data.token,
-              username: data.username,
-            };
-            this.$store.commit("loginUser", user);
-            this.$router.push("/");
-          } else {
-            this.errorMsg = data.msg;
-          }
-        })
-        .catch((err) => {
-          this.errorMsg = "Något gick fel :( Meddelande: " + err;
-        });
+      console.log("login:", this.username, this.password);
     },
   },
 };
 </script>
 
 <style scoped>
+form {
+  padding: 20px;
+}
+
+.inputText {
+  display: block;
+  width: 100%;
+  outline: none;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  padding: 10px;
+  font-size: 1em;
+  margin-bottom: 20px;
+}
+
+.loginButton {
+  width: 100%;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+  padding: 15px;
+  font-size: 1em;
+  background-color: #6591fc;
+  color: #fff;
+  font-weight: bold;
+}
 </style>

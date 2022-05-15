@@ -1,30 +1,23 @@
 <template>
   <div>
-    <h2>Skapa konto</h2>
-    <div v-if="!userCreated">
-      <p class="errorMsg" v-if="errorMsg">{{ errorMsg }}</p>
+    <h1 class="pageHeader">Skapa konto</h1>
+    <form>
       <input
-        class="standardInput"
+        class="inputText"
         type="text"
         v-model="username"
         placeholder="Användarnamn"
       />
       <input
-        class="standardInput"
+        class="inputText"
         type="password"
         v-model="password"
         placeholder="Lösenord"
       />
-      <button class="standardButton" @click.prevent="createUser">
+      <button class="loginButton" @click.prevent="createUser">
         Skapa konto
       </button>
-    </div>
-    <div v-else>
-      <p>Kontot har skapats!</p>
-      <router-link to="/login" class="boxLink boxLink-big boxLink-primary"
-        >Logga in</router-link
-      >
-    </div>
+    </form>
   </div>
 </template>
 
@@ -32,41 +25,43 @@
 export default {
   data() {
     return {
-      userCreated: false,
-      errorMsg: "",
       username: "",
       password: "",
     };
   },
   methods: {
     createUser() {
-      this.errorMsg = "";
-
-      if (this.username == "" || this.password == "") {
-        this.errorMsg = "Du måste ha ett användarnamn och lösenord";
-        return;
-      }
-
-      fetch("http://192.168.1.9:3000/api/auth/create-user", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: this.username,
-          password: this.password,
-        }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.ok) {
-            this.userCreated = true;
-          }
-        });
+      console.log("create account:", this.username, this.password);
     },
   },
 };
 </script>
 
-<style>
+<style scoped>
+form {
+  padding: 20px;
+}
+
+.inputText {
+  display: block;
+  width: 100%;
+  outline: none;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  padding: 10px;
+  font-size: 1em;
+  margin-bottom: 20px;
+}
+
+.loginButton {
+  width: 100%;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+  padding: 15px;
+  font-size: 1em;
+  background-color: #6591fc;
+  color: #fff;
+  font-weight: bold;
+}
 </style>
