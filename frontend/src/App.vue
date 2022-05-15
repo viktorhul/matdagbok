@@ -1,23 +1,41 @@
 <template>
-  <div>
-    <PageHeader />
-    <div class="router-view">
-      <router-view />
+  <div id="app">
+    <nav>
+      <router-link to="/" class="logo">M</router-link>
+      <div class="hamburgerIcon" @click="menuActive = !menuActive">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </nav>
+    <div class="menu" v-if="menuActive">
+      <ul>
+        <li v-if="user">
+          Inloggad som {{user.username}}
+        </li>
+        <li><router-link @click="menuActive = false" to="/">Startsida</router-link></li>
+        <li v-if="user"><router-link @click="menuActive = false" to="/add-meal">Lägg till måltid</router-link></li>
+        <li v-if="user" class="menuLink" @click="this.$store.commit('logoutUser');menuActive = false">Logga ut</li>
+        <li v-if="!user"><router-link @click="menuActive = false" to="/login">Logga in</router-link></li>
+      </ul>
     </div>
+    <router-view @click="menuActive = false"/>
   </div>
 </template>
 
 <script>
-import PageHeader from "@/components/PageHeader";
+import { mapGetters } from "vuex"
 
 export default {
-  components: {
-    PageHeader,
+  data() {
+    return {
+      menuActive: false
+    }
   },
-  beforeCreate() {
-    this.$store.commit("initializeStore");
-  },
-};
+  computed: mapGetters({
+    user: 'currentUser'
+  })
+}
 </script>
 
 <style>
@@ -25,100 +43,85 @@ export default {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-.router-view {
-  padding: 10px;
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
 }
 
-h2 {
-  font-size: 1.5em;
-  margin-bottom: 10px;
+nav {
+  background-color: #2E2E2E;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.boxLink {
-  display: inline-block;
-  margin: 5px;
-  border-radius: 5px;
-  background: lightgrey;
-  color: rgb(52, 52, 52);
+nav a {
+  /* color: #2c3e50; */
+  font-weight: bold;
   text-decoration: none;
+  color: white;
 }
 
-.boxLink-big {
-  padding: 10px;
-  font-size: 1em;
+nav a.logo {
+  padding: 20px;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 2em;
+  color: #6591FC;
 }
 
-.boxLink-small {
-  padding: 5px;
-  font-size: 0.5em;
+nav .hamburgerIcon {
+  padding: 20px;
 }
 
-.boxLink-primary {
-  background: rgb(192, 235, 190);
-  color: rgb(23, 104, 23);
+nav .hamburgerIcon div {
+  width: 35px;
+  height: 4px;
+  background: white;
+  margin: 6px 0;
 }
 
-.boxLink-secondary {
-  background: rgb(168, 187, 250);
-  color: rgb(22, 22, 186);
+.menu {
+  position: absolute;
+  width: 100%;
+  text-align: left;
+  background-color: white;
+  border-bottom: 1px solid #ccc;
+  box-shadow: 0 3px 20px 0 grey;
 }
 
-.boxLink-warning {
-  background: rgb(247, 132, 132);
-  color: rgb(129, 26, 26);
+.menu ul li {
+  font-size: 1.3em;
 }
 
-.boxLink:hover {
-  opacity: 0.8;
+.menu ul li + li {
+  border-top: 1px solid #ccc;
 }
 
-.boxInfo {
-  display: inline-block;
-  padding: 5px;
-  border-radius: 5px;
-  font-size: 0.5em;
-}
-
-.boxInfo + .boxInfo {
-  margin-left: 10px;
-}
-
-.boxInfo-primary {
-  background: rgb(255, 226, 168);
-  border: 1px solid rgb(193, 141, 86);
-  color: rgb(114, 74, 31);
-}
-
-.standardInput {
+.menu ul li a , .menuLink {
+  padding: 20px;
+  text-decoration: none;
+  color: rgb(53, 53, 53);
   display: block;
   width: 100%;
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  outline: none;
-  font-size: 1em;
+  height: 100%;
 }
 
-.standardInput + .standardInput {
-  margin-top: 10px;
+.menu ul li a.router-link-exact-active {
+  background-color: #6591FC;
+  color: #fff;
 }
 
-.standardButton {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  margin-top: 10px;
-  font-size: 1em;
-  border-radius: 10px;
-  border: 1px solid rgb(21, 71, 20);
-  background-color: rgb(92, 197, 99);
-  color: rgb(21, 71, 20);
+h1.pageHeader {
+  margin: 20px 0;
 }
 
-.vertical-margin {
-  margin: 10px 0;
+a {
+  text-decoration: none;
+  color: #6591FC;
 }
 </style>

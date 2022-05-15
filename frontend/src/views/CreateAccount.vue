@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="pageHeader">Logga in</h1>
+    <h1 class="pageHeader">Skapa konto</h1>
     <form>
       <input
         class="inputText"
@@ -14,7 +14,9 @@
         v-model="password"
         placeholder="Lösenord"
       />
-      <button class="loginButton" @click.prevent="loginUser">Logga in</button>
+      <button class="loginButton" @click.prevent="createUser">
+        Skapa konto
+      </button>
     </form>
   </div>
 </template>
@@ -28,8 +30,8 @@ export default {
     };
   },
   methods: {
-    loginUser() {
-      console.log("login:", this.username, this.password);
+    createUser() {
+      console.log("create account:", this.username, this.password);
     },
   },
 };
