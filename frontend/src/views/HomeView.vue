@@ -83,6 +83,7 @@ export default {
   },
   methods: {
     editMeal(mealId) {
+      console.log(mealId)
     },
   },
   computed: mapGetters({

@@ -71,7 +71,7 @@ export default {
             this.error = "Felaktiga inloggningsuppgifter";
           }
         })
-        .catch((err) => {
+        .catch(() => {
           this.error = "Fel på servern";
         });
     },
