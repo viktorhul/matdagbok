@@ -1,11 +1,15 @@
 const mysql = require('mysql2')
 const bcrypt = require('bcrypt')
+const dotenv = require('dotenv')
+
+dotenv.config()
+
 
 const config = {
-    host: "192.168.1.14",
-    user: "root",
-    password: "letmein",
-    database: "matdagbok"
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME
 }
 
 async function createUser(user) {
@@ -31,7 +35,9 @@ async function validateUser(username, password) {
 
     if (rows.length != 1) return { status: false }
 
+
     const user = rows[0]
+    console.log(password, process.env.PASSWORD_SALT, user.password)
     const verification = bcrypt.compareSync(password + process.env.PASSWORD_SALT, user.password)
 
     if (verification == false) return { status: false }
