@@ -56,7 +56,7 @@ export default {
         return;
       }
 
-      fetch("/api/auth/create-user", {
+      fetch("http://192.168.1.9:3000/api/auth/create-user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

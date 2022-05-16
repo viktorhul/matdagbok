@@ -177,4 +177,10 @@ a {
   text-decoration: none;
   color: #6591fc;
 }
+
+p {
+  margin-bottom: 15px;
+  padding: 0 20px;
+  line-height: 150%;
+}
 </style>

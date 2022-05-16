@@ -8,7 +8,10 @@
             {{ meal.meal_name }}
             <span class="calories"
               >{{
-                meal.ingredients.reduce((acc, ing) => acc + ing.total_calories, 0)
+                meal.ingredients.reduce(
+                  (acc, ing) => acc + ing.total_calories,
+                  0
+                )
               }}
               kalorier</span
             >
@@ -17,6 +20,7 @@
             <i @click="editMeal(meal.id)" class="editIcon"></i>
           </span>
         </h2>
+        <!-- TODO: Collapse tables -->
         <table class="ingredientsList">
           <colgroup>
             <col class="colIngredient" />
@@ -40,6 +44,10 @@
         </table>
       </div>
     </div>
+    <div v-else>
+      <p>Du har inte registrerat något i dag</p>
+    </div>
+    <router-link to="/add-meal">Lägg till måltid</router-link>
   </div>
   <div v-else>
     <h1 class="pageHeader">Matdagboken</h1>
@@ -55,7 +63,40 @@ export default {
   name: "HomeView",
   data() {
     return {
-      meals: [],
+      meals: [
+        {
+          meal_name: "Frukost",
+          meal_id: 1,
+          ingredients: [
+            {
+              name: "Knäckebröd",
+              amount: "2 st",
+              total_calories: 60,
+            },
+            {
+              name: "Ägg",
+              amount: "1 st",
+              total_calories: 120,
+            },
+          ],
+        },
+        {
+          meal_name: "Frukost",
+          meal_id: 1,
+          ingredients: [
+            {
+              name: "Knäckebröd",
+              amount: "2 st",
+              total_calories: 60,
+            },
+            {
+              name: "Ägg",
+              amount: "1 st",
+              total_calories: 120,
+            },
+          ],
+        },
+      ],
     };
   },
   created() {
@@ -67,7 +108,7 @@ export default {
         (Number.parseInt(date.getMonth()) + 1) +
         "-" +
         date.getDate();
-      fetch("/api/consumption/day/" + today, {
+      fetch("http://192.168.1.9:3000/api/consumption/day/" + today, {
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + this.user.token,
@@ -76,14 +117,14 @@ export default {
         .then((res) => res.json())
         .then((data) => {
           if (data.ok) {
-            this.meals = data.data;
+            //this.meals = data.data;
           }
         });
     }
   },
   methods: {
     editMeal(mealId) {
-      console.log(mealId)
+      console.log(mealId);
     },
   },
   computed: mapGetters({

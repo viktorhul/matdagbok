@@ -49,7 +49,7 @@ export default {
         return;
       }
 
-      fetch("/api/auth/login", {
+      fetch("http://192.168.1.9:3000/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
