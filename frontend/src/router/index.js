@@ -18,7 +18,6 @@ const routes = [
     component: AddMeal,
     beforeEnter: (_to, _from, next) => {
       const user = store.getters['currentUser']
-      console.log(user)
       if (user) next()
       else next({ path: '/login' })
     }

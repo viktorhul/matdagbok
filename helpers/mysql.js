@@ -37,7 +37,6 @@ async function validateUser(username, password) {
 
 
     const user = rows[0]
-    console.log(password, process.env.PASSWORD_SALT, user.password)
     const verification = bcrypt.compareSync(password + process.env.PASSWORD_SALT, user.password)
 
     if (verification == false) return { status: false }

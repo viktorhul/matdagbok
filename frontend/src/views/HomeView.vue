@@ -1,42 +1,44 @@
 <template>
   <div v-if="user" class="home">
     <h1 class="pageHeader">Dagens måltider</h1>
-    <div class="mealCard" v-for="meal in meals" :key="meal.meal_id">
-      <h2>
-        <span class="mealInfo">
-          {{ meal.meal_name }}
-          <span class="calories"
-            >{{
-              meal.ingredients.reduce((acc, ing) => acc + ing.total_calories, 0)
-            }}
-            kalorier</span
-          >
-        </span>
-        <span class="headerIcons">
-          <i @click="editMeal(meal.id)" class="editIcon"></i>
-        </span>
-      </h2>
-      <table class="ingredientsList">
-        <colgroup>
-          <col class="colIngredient" />
-          <col />
-          <col />
-        </colgroup>
-        <thead>
-          <tr>
-            <th>Vad</th>
-            <th>Storlek</th>
-            <th>Kalorier</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="ingredient in meal.ingredients" :key="ingredient.id">
-            <td>{{ ingredient.name }}</td>
-            <td>{{ ingredient.amount }}</td>
-            <td>{{ ingredient.total_calories }}</td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="meals" v-if="meals.length > 0">
+      <div class="mealCard" v-for="meal in meals" :key="meal.meal_id">
+        <h2>
+          <span class="mealInfo">
+            {{ meal.meal_name }}
+            <span class="calories"
+              >{{
+                meal.ingredients.reduce((acc, ing) => acc + ing.total_calories, 0)
+              }}
+              kalorier</span
+            >
+          </span>
+          <span class="headerIcons">
+            <i @click="editMeal(meal.id)" class="editIcon"></i>
+          </span>
+        </h2>
+        <table class="ingredientsList">
+          <colgroup>
+            <col class="colIngredient" />
+            <col />
+            <col />
+          </colgroup>
+          <thead>
+            <tr>
+              <th>Vad</th>
+              <th>Storlek</th>
+              <th>Kalorier</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="ingredient in meal.ingredients" :key="ingredient.id">
+              <td>{{ ingredient.name }}</td>
+              <td>{{ ingredient.amount }}</td>
+              <td>{{ ingredient.total_calories }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
   <div v-else>
@@ -57,7 +59,6 @@ export default {
     };
   },
   created() {
-    console.log(this.user);
     if (this.user) {
       const date = new Date();
       const today =
@@ -82,7 +83,6 @@ export default {
   },
   methods: {
     editMeal(mealId) {
-      console.log(mealId);
     },
   },
   computed: mapGetters({
