@@ -57,20 +57,28 @@ export default {
     };
   },
   created() {
-    const date = new Date()
-    const today = date.getFullYear() + '-' + (Number.parseInt(date.getMonth()) + 1) + '-' + date.getDate()
-    fetch("/api/consumption/day/" + today, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + this.user.token,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.ok) {
-          this.meals = data.data;
-        }
-      });
+    console.log(this.user);
+    if (this.user) {
+      const date = new Date();
+      const today =
+        date.getFullYear() +
+        "-" +
+        (Number.parseInt(date.getMonth()) + 1) +
+        "-" +
+        date.getDate();
+      fetch("/api/consumption/day/" + today, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + this.user.token,
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.ok) {
+            this.meals = data.data;
+          }
+        });
+    }
   },
   methods: {
     editMeal(mealId) {
