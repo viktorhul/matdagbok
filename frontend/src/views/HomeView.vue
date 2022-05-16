@@ -53,63 +53,12 @@ export default {
   name: "HomeView",
   data() {
     return {
-      meals: [
-        {
-          meal_id: 1,
-          name: "Frukost",
-          totalCalories: 438,
-          ingredients: [
-            {
-              id: 1,
-              name: "Knäckebröd",
-              amount: "30g",
-              calories: 60,
-            },
-            {
-              id: 2,
-              name: "Philadelphia, lätt",
-              amount: "30g",
-              calories: 78,
-            },
-            {
-              id: 3,
-              name: "Ägg",
-              amount: "1 st",
-              calories: 125,
-            },
-          ],
-        },
-        {
-          meal_id: 2,
-          name: "Lunch",
-          totalCalories: 753,
-          ingredients: [
-            {
-              id: 1,
-              name: "Pasta",
-              amount: "100g",
-              calories: 350,
-            },
-            {
-              id: 2,
-              name: "Parmesan",
-              amount: "20g",
-              calories: 120,
-            },
-            {
-              id: 3,
-              name: "Sås",
-              amount: "300g",
-              calories: 255,
-            },
-          ],
-        },
-      ],
+      meals: [],
     };
   },
   created() {
     //const date = new Date()
-    fetch("http://localhost:3000/api/consumption/day/2022-05-15", {
+    fetch("/api/consumption/day/2022-05-15", {
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + this.user.token,
