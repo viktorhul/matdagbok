@@ -67,6 +67,10 @@ export default {
 </script>
 
 <style>
+body {
+  overscroll-behavior: contain;
+}
+
 * {
   margin: 0;
   padding: 0;
