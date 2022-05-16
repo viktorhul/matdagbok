@@ -8,11 +8,6 @@ app.use(express.static('build'))
 app.use(express.json())
 app.use(cors())
 
-app.get('/db', async (req, res) => {
-    const boy = await mysql.query("SELECT * FROM ingredients;")
-    return res.json({ ok: true, data: boy })
-})
-
 app.use('/api/auth', require('./routes/auth'))
 app.use('/api/ingredients', require('./routes/ingredients'))
 app.use('/api/consumption', require('./routes/consumption'))

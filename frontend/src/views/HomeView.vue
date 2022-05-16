@@ -57,8 +57,9 @@ export default {
     };
   },
   created() {
-    //const date = new Date()
-    fetch("/api/consumption/day/2022-05-15", {
+    const date = new Date()
+    const today = date.getFullYear() + '-' + (Number.parseInt(date.getMonth()) + 1) + '-' + date.getDate()
+    fetch("/api/consumption/day/" + today, {
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + this.user.token,
