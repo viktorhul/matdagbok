@@ -85,6 +85,9 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
 }
 
 nav {
@@ -137,6 +140,7 @@ nav .hamburgerIcon div {
   font-weight: bold;
   font-size: 1.2em;
   border-radius: 45%;
+  padding-top: 3px;
 }
 
 .menu {

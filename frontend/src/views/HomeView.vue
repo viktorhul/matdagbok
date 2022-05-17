@@ -69,6 +69,7 @@ export default {
   name: "HomeView",
   data() {
     return {
+      test: "",
       meals: [
         {
           meal_name: "Frukost",
