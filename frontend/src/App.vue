@@ -1,10 +1,12 @@
 <template>
   <div id="app">
     <nav>
-      <router-link to="/" class="logo">M</router-link>
+      <router-link to="/" @click="menuActive = false" class="logo"
+        >M</router-link
+      >
       <div class="menuIcons">
         <div v-if="user" class="profileIcon">
-          {{ user.username.charAt(0) }}
+          {{ user.username.charAt(0).toUpperCase() }}
         </div>
 
         <div class="hamburgerIcon" @click="menuActive = !menuActive">

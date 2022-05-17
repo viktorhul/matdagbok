@@ -21,8 +21,9 @@
             <i
               @click="meal.isActive = !meal.isActive"
               class="mealIcon charIcon"
-              >{{ meal.isActive ? "-" : "+" }}</i
             >
+              <span>{{ meal.isActive ? "-" : "+" }}</span>
+            </i>
           </span>
         </h2>
         <!-- TODO: Collapse tables -->
@@ -115,7 +116,7 @@ export default {
         (Number.parseInt(date.getMonth()) + 1) +
         "-" +
         date.getDate();
-      fetch("http://192.168.1.9:3000/api/consumption/day/" + today, {
+      fetch("https://mat.hultsten.eu/api/consumption/day/" + today, {
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + this.user.token,
@@ -190,10 +191,13 @@ export default {
 }
 
 .charIcon {
-  font-size: 1em;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.charIcon span {
+  font-size: 1.5em;
 }
 
 .headerIcons {
