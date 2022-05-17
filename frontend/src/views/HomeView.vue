@@ -17,11 +17,16 @@
             >
           </span>
           <span class="headerIcons">
-            <i @click="editMeal(meal.id)" class="editIcon"></i>
+            <i @click="editMeal(meal.id)" class="mealIcon editIcon"></i>
+            <i
+              @click="meal.isActive = !meal.isActive"
+              class="mealIcon charIcon"
+              >{{ meal.isActive ? "-" : "+" }}</i
+            >
           </span>
         </h2>
         <!-- TODO: Collapse tables -->
-        <table class="ingredientsList">
+        <table class="ingredientsList" v-if="meal.isActive">
           <colgroup>
             <col class="colIngredient" />
             <col />
@@ -67,6 +72,7 @@ export default {
         {
           meal_name: "Frukost",
           meal_id: 1,
+          isActive: false,
           ingredients: [
             {
               name: "Knäckebröd",
@@ -83,6 +89,7 @@ export default {
         {
           meal_name: "Frukost",
           meal_id: 1,
+          isActive: false,
           ingredients: [
             {
               name: "Knäckebröd",
@@ -168,15 +175,25 @@ export default {
   width: 50%;
 }
 
-.editIcon {
+.mealIcon {
   width: 35px;
   height: 35px;
   border-radius: 5px;
   background-color: #bbb;
-  background-image: url("@/assets/edit_icon.png");
   background-size: 50%;
   background-position: center;
   background-repeat: no-repeat;
+}
+
+.editIcon {
+  background-image: url("@/assets/edit_icon.png");
+}
+
+.charIcon {
+  font-size: 1em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .headerIcons {
