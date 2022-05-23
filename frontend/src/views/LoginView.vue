@@ -49,7 +49,7 @@ export default {
         return;
       }
 
-      fetch("https://mat.hultsten.eu/api/auth/login", {
+      fetch(process.env.VUE_APP_PATH + "/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

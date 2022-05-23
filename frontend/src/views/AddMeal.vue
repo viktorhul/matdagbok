@@ -1,7 +1,6 @@
 <template>
   <div class="container">
-    <h1 class="pageHeader">Ny måltid</h1>
-    {{ test }}
+    <h1 class="pageHeader">Ny måltid {{(ingredients.length > 0) ? '(' + ingredients.length + ')' : '' }}</h1>
     <div v-if="!categoryChosen">
       <div
         class="optionBox"
@@ -27,38 +26,106 @@
       <button @click="categoryChosen = true">Continue</button>
     </div>
     <div v-else-if="isAddingIngredients">
-      <div class="ingredientsInput">
-        <input class="input_ingredients" type="text" placeholder="Ingrediens" />
+      <!--<div class="ingredientsInput">
+        <input list="ingredient_suggestions" class="input_ingredients" type="text" placeholder="Ingrediens" />
+        <datalist id="ingredient_suggestions">
+          <option v-for="suggestion in suggestions" :key="suggestion.name" :value="suggestion.name" />
+        </datalist>
         <input
           class="input_calories"
           type="text"
           placeholder="kalorier per 100g"
         />
         <input class="input_amount" type="text" placeholder="Antal gram" />
+      </div>-->
+      <div v-if="addingIngredientBox" class="addingIngredientsBox">
+      <span @click="addingIngredientBox = false" class="headerBox">Stäng (X)</span>
+      <div class="inputContainer">
+        <input type="text" ref="ingredientInput" v-model="ingredientInput" class="icInputField" @input="checkIngredient" placeholder="Sök ingrediens...">
       </div>
+      <ul v-if="activeSuggestions.length > 0" class="suggestionsBox">
+        <li v-for="suggestion in activeSuggestions" :key="suggestion.id" @click="addIngredient(suggestion)">
+          <span class="ingredientName">{{suggestion.name}}</span>
+        </li>
+      </ul>
+      <p v-else class="hintText">Börja skriv...</p>
+      </div>
+      <div v-if="ingredients.length > 0">
+        <IngredientCard v-for="ingredient in ingredients" :key="ingredient.id" :ingredient="ingredient" />
+      </div>
+      <span @click="addingIngredientBox = true" class="linkText">Lägg till ingrediens</span>
     </div>
   </div>
 </template>
 
 <script>
+import IngredientCard from '@/components/IngredientCard.vue'
 export default {
+  components: {
+    IngredientCard
+  },
   data() {
     return {
-      test: "",
       categoryChosen: true,
       isAddingIngredients: true,
-      ingredient: "",
+      ingredients: [],
       category: "",
       suggestions: [
         {
           name: "Mjölk",
         },
+        {
+          name: "Havregryn",
+        },
+        {
+          name: "Jordgubbssaft"
+        },
+        {
+          name: "Philadelphia, lätt"
+        },
+        {
+          name: "Philadelphia, vanlig"
+        },
+        {
+          name: "Smör"
+        },
+        {
+          name: "Hushållsost"
+        },
+        {
+          name: "Creme fraiche, normal"
+        },
+        {
+          name: "Creme fraiche, lätt"
+        },
+        {
+          name: "Creme fraiche, mini"
+        }
       ],
+      activeSuggestions: [],
+      addingIngredientBox: false,
+      ingredientInput: '',
       suggestionboxActive: false,
     };
   },
   created() {},
-  methods: {},
+  methods: {
+    checkIngredient(event) {
+      this.ingredientInput = event.target.value;
+      if (this.ingredientInput.length <= 1) {
+        this.activeSuggestions = [];
+        return;
+      }
+
+      this.activeSuggestions = this.suggestions.filter(s => s.name.toLocaleLowerCase().indexOf(this.ingredientInput.toLowerCase()) !== -1);
+    },
+    addIngredient(ingredient) {
+      this.ingredients.push(ingredient);
+      this.activeSuggestions = [];
+      this.ingredientInput = '';
+      this.$refs.ingredientInput.focus();
+    }
+  },
 };
 </script>
 
@@ -109,5 +176,52 @@ export default {
 
 .input_amount {
   width: 30%;
+}
+
+.addingIngredientsBox {
+  background-color: #fff;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
+
+.addingIngredientsBox .headerBox {
+  display: block;
+  text-align: right;
+  padding: 10px;
+  background-color: #eee;
+}
+
+.inputContainer {
+  width: 100%;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.inputContainer .icInputField {
+  width: 100%;
+  padding: 5px;
+  font-size: 1em;
+  border: none;
+  outline: none;
+}
+
+.suggestionsBox {
+
+}
+
+.suggestionsBox li {
+  text-align: left;
+  padding: 10px;
+}
+
+.suggestionsBox li .ingredientName {
+  font-size: 1em;
+}
+
+.hintText {
+  color: #aaa;
+  font-size: .8em;
+  margin-top: 15px;
 }
 </style>

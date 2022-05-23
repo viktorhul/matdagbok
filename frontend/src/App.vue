@@ -35,6 +35,7 @@
           @click="
             this.$store.commit('logoutUser');
             menuActive = false;
+            this.$router.push('/login')
           "
         >
           Logga ut
@@ -179,7 +180,7 @@ h1.pageHeader {
   margin: 20px 0;
 }
 
-a {
+a, .linkText {
   text-decoration: none;
   color: #6591fc;
 }
