@@ -34,6 +34,7 @@ services:
       DB_NAME: matdagbok
       PASSWORD_SALT: Ssh4DAWqDrv9NyWTMQAPYXR6uTvzU2HsxuYMcA9L5sS2AhxDtsmSwsSA3L
       TOKEN_SECRET: TNjcZnUehDKz7APMZrKy84AYSGKSkkSerbYRSqAJFDFauwkhzdTKcWnUXN
+      VUE_APP_PATH: ''
     depends_on:
       - mysql
     networks:
