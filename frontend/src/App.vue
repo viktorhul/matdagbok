@@ -5,7 +5,11 @@
         >M</router-link
       >
       <div class="menuIcons">
-        <div v-if="user" class="profileIcon">
+        <div
+          v-if="user"
+          class="profileIcon"
+          @click="this.$router.push('/profile')"
+        >
           {{ user.username.charAt(0).toUpperCase() }}
         </div>
 
@@ -18,7 +22,11 @@
     </nav>
     <div class="menu" v-if="menuActive">
       <ul>
-        <li v-if="user">Inloggad som {{ user.username }}</li>
+        <li v-if="user">
+          <router-link @click="menuActive = false" to="/profile"
+            >Inloggad som {{ user.username }}</router-link
+          >
+        </li>
         <li>
           <router-link @click="menuActive = false" to="/"
             >Startsida</router-link

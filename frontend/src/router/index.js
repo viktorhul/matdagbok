@@ -3,6 +3,7 @@ import HomeView from '@/views/HomeView.vue'
 import AddMeal from '@/views/AddMeal.vue'
 import LoginView from '@/views/LoginView.vue'
 import CreateAccount from '@/views/CreateAccount.vue'
+import ProfileView from '@/views/ProfileView.vue'
 
 import store from '../store'
 
@@ -42,6 +43,16 @@ const routes = [
       else next()
     }
   },
+  {
+    path: '/profile',
+    name: 'profile',
+    component: ProfileView,
+    beforeEnter: (_to, _from, next) => {
+      const user = store.getters['currentUser']
+      if (user) next()
+      else next({ path: '/login' })
+    }
+  }
 ]
 
 const router = createRouter({

@@ -1,6 +1,8 @@
 <template>
   <div v-if="user" class="home">
     <h1 class="pageHeader">Dagens måltider</h1>
+    <p v-if="!mealsLoaded">Hämtar måltider...</p>
+    <p v-else-if="meals.length == 0">Inga registrerade måltider</p>
     <div class="meals" v-if="meals.length > 0">
       <div class="mealCard" v-for="meal in meals" :key="meal.meal_id">
         <h2>
@@ -17,7 +19,12 @@
             >
           </span>
           <span class="headerIcons">
-            <i @click="editMeal(meal.id)" class="mealIcon editIcon"></i>
+            <!-- TODO: Implement editable meals -->
+            <i
+              v-if="false"
+              @click="this.$router.push('/add-meal/' + meal.meal_id)"
+              class="mealIcon editIcon"
+            ></i>
             <i
               @click="meal.isActive = !meal.isActive"
               class="mealIcon charIcon"
@@ -26,7 +33,7 @@
             </i>
           </span>
         </h2>
-        <!-- TODO: Collapse tables -->
+
         <table class="ingredientsList" v-if="meal.isActive">
           <colgroup>
             <col class="colIngredient" />
@@ -69,43 +76,8 @@ export default {
   name: "HomeView",
   data() {
     return {
-      test: "",
-      meals: [
-        {
-          meal_name: "Frukost",
-          meal_id: 1,
-          isActive: false,
-          ingredients: [
-            {
-              name: "Knäckebröd",
-              amount: "2 st",
-              total_calories: 60,
-            },
-            {
-              name: "Ägg",
-              amount: "1 st",
-              total_calories: 120,
-            },
-          ],
-        },
-        {
-          meal_name: "Frukost",
-          meal_id: 1,
-          isActive: false,
-          ingredients: [
-            {
-              name: "Knäckebröd",
-              amount: "2 st",
-              total_calories: 60,
-            },
-            {
-              name: "Ägg",
-              amount: "1 st",
-              total_calories: 120,
-            },
-          ],
-        },
-      ],
+      mealsLoaded: false,
+      meals: [],
     };
   },
   created() {
@@ -125,14 +97,17 @@ export default {
       })
         .then((res) => res.json())
         .then((data) => {
+          this.mealsLoaded = true;
           if (data.ok) {
-            //this.meals = data.data;
+            this.meals = data.data;
+            console.log(data.data);
           }
         });
     }
   },
   methods: {
     editMeal(mealId) {
+      // TODO
       console.log(mealId);
     },
   },
