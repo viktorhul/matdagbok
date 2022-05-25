@@ -142,7 +142,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .mealCard {
   text-align: left;
   border-bottom: 1px solid #ccc;

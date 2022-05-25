@@ -1,6 +1,9 @@
 <template>
   <div class="container">
-    <h1 class="pageHeader">Ny måltid {{(ingredients.length > 0) ? '(' + ingredients.length + ')' : '' }}</h1>
+    <h1 class="pageHeader">Ny måltid</h1>
+    <div class="infoBoxContainer">
+      <span class="infoBox">{{ ingredients.length }} ingredienser</span>
+    </div>
     <div v-if="!categoryChosen">
       <div
         class="optionBox"
@@ -38,37 +41,65 @@
         />
         <input class="input_amount" type="text" placeholder="Antal gram" />
       </div>-->
-      <div v-if="addingIngredientBox" class="addingIngredientsBox">
-      <span @click="addingIngredientBox = false" class="headerBox">Stäng (X)</span>
-      <div class="inputContainer">
-        <input type="text" ref="ingredientInput" v-model="ingredientInput" class="icInputField" @input="checkIngredient" placeholder="Sök ingrediens...">
-      </div>
-      <ul v-if="activeSuggestions.length > 0" class="suggestionsBox">
-        <li v-for="suggestion in activeSuggestions" :key="suggestion.id" @click="addIngredient(suggestion)">
-          <span class="ingredientName">{{suggestion.name}}</span>
-        </li>
-      </ul>
-      <p v-else class="hintText">Börja skriv...</p>
-      </div>
+      <Transition name="addIngredients">
+        <div v-if="addingIngredientBox" class="addingIngredientsBox">
+          <span @click="addingIngredientBox = false" class="headerBox"
+            ><b class="closeIcon">&#10005;</b></span
+          >
+          <div class="inputContainer">
+            <input
+              type="text"
+              ref="ingredientInput"
+              v-model="ingredientInput"
+              class="icInputField"
+              @input="checkIngredient"
+              placeholder="Sök ingrediens..."
+            />
+          </div>
+          <ul v-if="activeSuggestions.length > 0" class="suggestionsBox">
+            <li
+              v-for="suggestion in activeSuggestions"
+              :key="suggestion.id"
+              @click="addIngredient(suggestion)"
+            >
+              <span class="ingredientName">{{ suggestion.name }}</span>
+            </li>
+          </ul>
+          <p v-else class="hintText">Börja skriv...</p>
+        </div>
+      </Transition>
       <div v-if="ingredients.length > 0">
-        <IngredientCard v-for="ingredient in ingredients" :key="ingredient.id" :ingredient="ingredient" />
+        <IngredientCard
+          v-for="ingredient in ingredients"
+          :key="ingredient.id"
+          :ingredient="ingredient"
+        />
       </div>
-      <span @click="addingIngredientBox = true" class="linkText">Lägg till ingrediens</span>
+      <span @click="addingIngredientBox = true" class="linkText"
+        >Lägg till ingrediens</span
+      >
     </div>
   </div>
 </template>
 
 <script>
-import IngredientCard from '@/components/IngredientCard.vue'
+import IngredientCard from "@/components/IngredientCard.vue";
 export default {
   components: {
-    IngredientCard
+    IngredientCard,
   },
   data() {
     return {
       categoryChosen: true,
       isAddingIngredients: true,
-      ingredients: [],
+      ingredients: [
+        {
+          name: "Mjölk",
+        },
+        {
+          name: "Havregryn",
+        },
+      ],
       category: "",
       suggestions: [
         {
@@ -78,33 +109,33 @@ export default {
           name: "Havregryn",
         },
         {
-          name: "Jordgubbssaft"
+          name: "Jordgubbssaft",
         },
         {
-          name: "Philadelphia, lätt"
+          name: "Philadelphia, lätt",
         },
         {
-          name: "Philadelphia, vanlig"
+          name: "Philadelphia, vanlig",
         },
         {
-          name: "Smör"
+          name: "Smör",
         },
         {
-          name: "Hushållsost"
+          name: "Hushållsost",
         },
         {
-          name: "Creme fraiche, normal"
+          name: "Creme fraiche, normal",
         },
         {
-          name: "Creme fraiche, lätt"
+          name: "Creme fraiche, lätt",
         },
         {
-          name: "Creme fraiche, mini"
-        }
+          name: "Creme fraiche, mini",
+        },
       ],
       activeSuggestions: [],
       addingIngredientBox: false,
-      ingredientInput: '',
+      ingredientInput: "",
       suggestionboxActive: false,
     };
   },
@@ -117,14 +148,19 @@ export default {
         return;
       }
 
-      this.activeSuggestions = this.suggestions.filter(s => s.name.toLocaleLowerCase().indexOf(this.ingredientInput.toLowerCase()) !== -1);
+      this.activeSuggestions = this.suggestions.filter(
+        (s) =>
+          s.name
+            .toLocaleLowerCase()
+            .indexOf(this.ingredientInput.toLowerCase()) !== -1
+      );
     },
     addIngredient(ingredient) {
       this.ingredients.push(ingredient);
       this.activeSuggestions = [];
-      this.ingredientInput = '';
+      this.ingredientInput = "";
       this.$refs.ingredientInput.focus();
-    }
+    },
   },
 };
 </script>
@@ -207,7 +243,6 @@ export default {
 }
 
 .suggestionsBox {
-
 }
 
 .suggestionsBox li {
@@ -221,7 +256,37 @@ export default {
 
 .hintText {
   color: #aaa;
-  font-size: .8em;
+  font-size: 0.8em;
   margin-top: 15px;
+}
+
+.infoBoxContainer {
+  display: flex;
+  padding: 10px;
+  justify-content: center;
+}
+
+.infoBox {
+  background-color: #b5c5fe;
+  color: #272727;
+  font-size: 1em;
+  font-weight: normal;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.addIngredients-enter-active,
+.addIngredients-leave-active {
+  transition: all 0.5s ease;
+}
+
+.addIngredients-enter-from,
+.addIngredients-leave-to {
+  transform: translateY(200px);
+  opacity: 0;
+}
+
+.closeIcon {
+  font-size: 1.5em;
 }
 </style>
