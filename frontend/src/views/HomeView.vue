@@ -100,7 +100,6 @@ export default {
           this.mealsLoaded = true;
           if (data.ok) {
             this.meals = data.data;
-            console.log(data.data);
           }
         });
     }

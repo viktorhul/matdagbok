@@ -220,7 +220,6 @@ export default {
       this.$refs.ingredientInput.focus();
     },
     insertMeal() {
-      console.log("insertMeal");
       fetch(process.env.VUE_APP_PATH || "" + "/api/consumption/add", {
         method: "POST",
         headers: {
@@ -233,7 +232,7 @@ export default {
         }),
       })
         .then((res) => res.json())
-        .then((data) => {
+        .then(() => {
           this.mealInserted = true;
         });
     },

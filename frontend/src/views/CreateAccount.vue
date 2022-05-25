@@ -77,9 +77,8 @@ export default {
             this.error = "Användarnamnet är upptaget";
           }
         })
-        .catch((err) => {
-          console.log(err);
-          this.error = "Fel på servern";
+        .catch(() => {
+          this.error = "Något gick fel... försök igen senare";
         });
     },
   },
