@@ -49,7 +49,7 @@ export default {
         return;
       }
 
-      fetch(process.env.VUE_APP_PATH + "/api/auth/login", {
+      fetch(process.env.VUE_APP_PATH || "" + "/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

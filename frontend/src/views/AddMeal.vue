@@ -216,7 +216,7 @@ export default {
     },
     insertMeal() {
       console.log("insertMeal");
-      fetch(process.env.VUE_APP_PATH + "/api/consumption/add", {
+      fetch(process.env.VUE_APP_PATH || "" + "/api/consumption/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

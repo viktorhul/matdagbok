@@ -89,7 +89,7 @@ export default {
         (Number.parseInt(date.getMonth()) + 1) +
         "-" +
         date.getDate();
-      fetch(process.env.VUE_APP_PATH + "/api/consumption/day/" + today, {
+      fetch(process.env.VUE_APP_PATH || "" + "/api/consumption/day/" + today, {
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + this.user.token,
