@@ -1,6 +1,10 @@
 <template>
   <div class="container">
     <h1 class="pageHeader">Ny måltid</h1>
+    <p v-if="mealInserted">
+      Måltiden inlagd!
+      <router-link to="/add-meal">Lägg till ny måltid</router-link>
+    </p>
     <div class="infoBoxContainer">
       <span
         v-if="categoryChosen"
@@ -108,6 +112,7 @@ export default {
   },
   data() {
     return {
+      mealInserted: false,
       categoryChosen: false,
       category: "",
       isAddingIngredients: true,
@@ -229,7 +234,7 @@ export default {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
+          this.mealInserted = true;
         });
     },
     updateMeal() {
