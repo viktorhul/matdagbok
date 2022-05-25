@@ -8,6 +8,7 @@
         type="text"
         v-model="username.value"
         placeholder="Användarnamn"
+        autocomplete="username"
         :class="{ errorInput: username.error }"
       />
       <input
@@ -15,6 +16,7 @@
         type="password"
         v-model="password.value"
         placeholder="Lösenord"
+        autocomplete="new-password"
         :class="{ errorInput: password.error }"
       />
       <button class="loginButton" @click.prevent="createUser">
