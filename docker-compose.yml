@@ -2,19 +2,22 @@ version: '3'
 
 services:
   mysql:
-    image: mysql
+    image: mysql:oracle
     container_name: matdagbok_db
     command: --default-authentication-plugin=mysql_native_password
     restart: unless-stopped
     volumes:
       - ./matdagbok.sql:/docker-entrypoint-initdb.d/0_init.sql
+    ports:
+      - 3306:3306
     expose:
       - 3306
     environment:
       MYSQL_DATABASE: matdagbok
-      MYSQL_USER: e23bN4S2PDGDvG64zBfqv9GGghet75BvZEx8RNAksX9JF
+      MYSQL_USER: user 
       MYSQL_PASSWORD: YfQkc3jxhputLA7ufGEDezQxfz4CxHFZBjdts3FbXUs3t
       MYSQL_ROOT_PASSWORD: YfQkc3jxhputLA7ufGEDezQxfz4CxHFZBjdts3FbXUs3t
+      TZ: Europe/Stockholm
     networks:
       - internalnet
 
@@ -29,8 +32,8 @@ services:
     environment:
       DB_HOST: mysql
       DB_PORT: 3306
-      DB_USER: e23bN4S2PDGDvG64zBfqv9GGghet75BvZEx8RNAksX9JF
-      DB_PASSWORD: YfQkc3jxhputLA7ufGEDezQxfz4CxHFZBjdts3FbXUs3t
+      DB_USER: 'user'
+      DB_PASSWORD: 'YfQkc3jxhputLA7ufGEDezQxfz4CxHFZBjdts3FbXUs3t'
       DB_NAME: matdagbok
       PASSWORD_SALT: Ssh4DAWqDrv9NyWTMQAPYXR6uTvzU2HsxuYMcA9L5sS2AhxDtsmSwsSA3L
       TOKEN_SECRET: TNjcZnUehDKz7APMZrKy84AYSGKSkkSerbYRSqAJFDFauwkhzdTKcWnUXN
