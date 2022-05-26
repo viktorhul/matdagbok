@@ -1,61 +1,67 @@
 <template>
   <div id="app">
     <nav>
-      <router-link to="/" @click="menuActive = false" class="logo"
-        >M</router-link
-      >
-      <div class="menuIcons">
-        <div
-          v-if="user"
-          class="profileIcon"
-          @click="this.$router.push('/profile')"
+      <div class="wrapper">
+        <router-link to="/" @click="menuActive = false" class="logo"
+          >M</router-link
         >
-          {{ user.username.charAt(0).toUpperCase() }}
-        </div>
-
-        <div class="hamburgerIcon" @click="menuActive = !menuActive">
-          <div></div>
-          <div></div>
-          <div></div>
+        <div class="menuIcons">
+          <div
+            v-if="user"
+            class="profileIcon"
+            @click="this.$router.push('/profile')"
+          >
+            {{ user.username.charAt(0).toUpperCase() }}
+          </div>
+  
+          <div class="hamburgerIcon" @click="menuActive = !menuActive">
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
         </div>
       </div>
     </nav>
     <div class="menu" v-if="menuActive">
-      <ul>
-        <li v-if="user">
-          <router-link @click="menuActive = false" to="/profile"
-            >Inloggad som {{ user.username }}</router-link
+      <div class="wrapper">
+        <ul>
+          <li v-if="user">
+            <router-link @click="menuActive = false" to="/profile"
+              >Inloggad som {{ user.username }}</router-link
+            >
+          </li>
+          <li>
+            <router-link @click="menuActive = false" to="/"
+              >Startsida</router-link
+            >
+          </li>
+          <li v-if="user">
+            <router-link @click="menuActive = false" to="/add-meal"
+              >Lägg till måltid</router-link
+            >
+          </li>
+          <li
+            v-if="user"
+            class="menuLink"
+            @click="
+              this.$store.commit('logoutUser');
+              menuActive = false;
+              this.$router.push('/login');
+            "
           >
-        </li>
-        <li>
-          <router-link @click="menuActive = false" to="/"
-            >Startsida</router-link
-          >
-        </li>
-        <li v-if="user">
-          <router-link @click="menuActive = false" to="/add-meal"
-            >Lägg till måltid</router-link
-          >
-        </li>
-        <li
-          v-if="user"
-          class="menuLink"
-          @click="
-            this.$store.commit('logoutUser');
-            menuActive = false;
-            this.$router.push('/login');
-          "
-        >
-          Logga ut
-        </li>
-        <li v-if="!user">
-          <router-link @click="menuActive = false" to="/login"
-            >Logga in</router-link
-          >
-        </li>
-      </ul>
+            Logga ut
+          </li>
+          <li v-if="!user">
+            <router-link @click="menuActive = false" to="/login"
+              >Logga in</router-link
+            >
+          </li>
+        </ul>
+      </div>
     </div>
-    <router-view @click="menuActive = false" />
+    <div class="wrapper">
+      <router-view @click="menuActive = false" />
+    </div>
   </div>
 </template>
 
@@ -86,6 +92,11 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+.wrapper {
+  width: 500px;
+  margin: 0 auto;
 }
 
 #app {
