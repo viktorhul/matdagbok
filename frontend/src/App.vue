@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <nav>
-      <div class="wrapper">
+    <div class="navWrapper">
+      <nav>
         <router-link to="/" @click="menuActive = false" class="logo"
           >M</router-link
         >
@@ -13,53 +13,51 @@
           >
             {{ user.username.charAt(0).toUpperCase() }}
           </div>
-  
+
           <div class="hamburgerIcon" @click="menuActive = !menuActive">
             <div></div>
             <div></div>
             <div></div>
           </div>
         </div>
-      </div>
-    </nav>
-    <div class="menu" v-if="menuActive">
-      <div class="wrapper">
-        <ul>
-          <li v-if="user">
-            <router-link @click="menuActive = false" to="/profile"
-              >Inloggad som {{ user.username }}</router-link
-            >
-          </li>
-          <li>
-            <router-link @click="menuActive = false" to="/"
-              >Startsida</router-link
-            >
-          </li>
-          <li v-if="user">
-            <router-link @click="menuActive = false" to="/add-meal"
-              >Lägg till måltid</router-link
-            >
-          </li>
-          <li
-            v-if="user"
-            class="menuLink"
-            @click="
-              this.$store.commit('logoutUser');
-              menuActive = false;
-              this.$router.push('/login');
-            "
-          >
-            Logga ut
-          </li>
-          <li v-if="!user">
-            <router-link @click="menuActive = false" to="/login"
-              >Logga in</router-link
-            >
-          </li>
-        </ul>
-      </div>
+      </nav>
     </div>
-    <div class="wrapper">
+    <div class="menu" v-if="menuActive">
+      <ul>
+        <li v-if="user">
+          <router-link @click="menuActive = false" to="/profile"
+            >Inloggad som {{ user.username }}</router-link
+          >
+        </li>
+        <li>
+          <router-link @click="menuActive = false" to="/"
+            >Startsida</router-link
+          >
+        </li>
+        <li v-if="user">
+          <router-link @click="menuActive = false" to="/add-meal"
+            >Lägg till måltid</router-link
+          >
+        </li>
+        <li
+          v-if="user"
+          class="menuLink"
+          @click="
+            this.$store.commit('logoutUser');
+            menuActive = false;
+            this.$router.push('/login');
+          "
+        >
+          Logga ut
+        </li>
+        <li v-if="!user">
+          <router-link @click="menuActive = false" to="/login"
+            >Logga in</router-link
+          >
+        </li>
+      </ul>
+    </div>
+    <div class="routerView">
       <router-view @click="menuActive = false" />
     </div>
   </div>
@@ -94,11 +92,6 @@ body {
   box-sizing: border-box;
 }
 
-.wrapper {
-  width: 500px;
-  margin: 0 auto;
-}
-
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -110,11 +103,17 @@ body {
   height: 100vh;
 }
 
-nav {
+.navWrapper {
   background-color: #2e2e2e;
+  width: 100%;
+}
+
+nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 700px;
+  margin: 0 auto;
 }
 
 nav a {
@@ -129,6 +128,7 @@ nav a.logo {
   font-family: "Times New Roman", Times, serif;
   font-size: 2em;
   color: #6591fc;
+  user-select: none;
 }
 
 nav .menuIcons {
@@ -165,7 +165,10 @@ nav .hamburgerIcon div {
 
 .menu {
   position: absolute;
-  width: 100%;
+  width: 700px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
   text-align: left;
   background-color: white;
   border-bottom: 1px solid #ccc;
@@ -173,7 +176,9 @@ nav .hamburgerIcon div {
 }
 
 .menu ul li {
+  user-select: none;
   font-size: 1.3em;
+  list-style-type: none;
 }
 
 .menu ul li + li {
@@ -213,5 +218,24 @@ p {
   margin-bottom: 15px;
   padding: 0 20px;
   line-height: 150%;
+}
+
+.routerView {
+  width: 700px;
+  margin: 0 auto;
+}
+
+@media screen and (max-width: 700px) {
+  nav {
+    width: 100%;
+  }
+
+  .menu {
+    width: 100%;
+  }
+
+  .routerView {
+    width: 100%;
+  }
 }
 </style>
