@@ -41,7 +41,9 @@
         <label :for="alternative">{{ alternative }}</label>
       </div>
 
-      <button @click="categoryChosen = true">Continue</button>
+      <button class="nextStepButton" @click="categoryChosen = true">
+        Fortsätt
+      </button>
     </div>
     <div v-else-if="isAddingIngredients">
       <Transition name="addIngredients">
@@ -268,6 +270,12 @@ export default {
 .optionBox input:checked + label {
   background-color: #6591fc;
   color: #141e37;
+}
+
+.nextStepButton {
+  width: 200px;
+  padding: 10px;
+  font-size: 1em;
 }
 
 .ingredientsInput {
