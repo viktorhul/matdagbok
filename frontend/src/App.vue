@@ -204,8 +204,35 @@ h1.pageHeader {
   margin: 20px 0;
 }
 
-h1.pageHeader + .infoBoxContainer {
+h4.pageSubheader {
+  font-size: 1em;
+  font-weight: normal;
+  margin-top: -10px;
+  margin-bottom: 20px;
+}
+
+h1.pageHeader + .infoBoxContainer,
+h4.pageSubheader + .infoBoxContainer {
   margin-top: -20px;
+}
+
+.boxContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  column-gap: 5px;
+  height: 30px;
+}
+
+.switchButton {
+  background-color: #ddd;
+  padding: 10px 15px;
+  border-radius: 10px;
+  user-select: none;
+}
+
+.switchButton-disabled {
+  background-color: #eee;
 }
 
 a,

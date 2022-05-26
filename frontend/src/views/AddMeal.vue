@@ -222,7 +222,7 @@ export default {
       this.$refs.ingredientInput.focus();
     },
     insertMeal() {
-      fetch(process.env.VUE_APP_PATH || "" + "/api/consumption/add", {
+      fetch((process.env.VUE_APP_PATH || "") + "/api/consumption/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

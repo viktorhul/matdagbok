@@ -58,7 +58,7 @@ export default {
         return;
       }
 
-      fetch(process.env.VUE_APP_PATH || "" + "/api/auth/create-user", {
+      fetch((process.env.VUE_APP_PATH || "") + "/api/auth/create-user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

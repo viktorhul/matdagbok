@@ -1,11 +1,20 @@
 <template>
   <div v-if="user" class="home">
     <h1 class="pageHeader">Dagens måltider</h1>
+    <h4 class="pageSubheader boxContainer">
+      <span @click="changeSelectedDate(-1)" class="switchButton">&lt;</span>
+      <span class="switchButton">{{ selectedDate }}</span>
+      <span
+        @click="changeSelectedDate(1)"
+        class="switchButton switchButton-disabled"
+        >&gt;</span
+      >
+    </h4>
     <p v-if="!mealsLoaded">Hämtar måltider...</p>
     <p v-else-if="meals.length == 0">Inga registrerade måltider</p>
     <div class="meals" v-if="meals.length > 0">
       <div class="mealCard" v-for="meal in meals" :key="meal.meal_id">
-        <h2>
+        <h2 @click="meal.isActive = !meal.isActive">
           <span class="mealInfo">
             {{ meal.meal_name }}
             <span class="calories"
@@ -76,6 +85,7 @@ export default {
   name: "HomeView",
   data() {
     return {
+      selectedDate: new Date().toLocaleDateString("sv-SE"),
       mealsLoaded: false,
       meals: [],
     };
@@ -89,12 +99,15 @@ export default {
         (Number.parseInt(date.getMonth()) + 1) +
         "-" +
         date.getDate();
-      fetch(process.env.VUE_APP_PATH || "" + "/api/consumption/day/" + today, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + this.user.token,
-        },
-      })
+      fetch(
+        (process.env.VUE_APP_PATH || "") + "/api/consumption/day/" + today,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + this.user.token,
+          },
+        }
+      )
         .then((res) => res.json())
         .then((data) => {
           this.mealsLoaded = true;
@@ -108,6 +121,20 @@ export default {
     editMeal(mealId) {
       // TODO
       console.log(mealId);
+    },
+    changeSelectedDate(inc) {
+      if (inc === 1) {
+        // increment
+        // TODO: Increment date
+        console.log(new Date().setDate(this.selectedDate + 1));
+        /*this.selectedDate = this.selectedDate.setDate(
+          this.selectedDate.getDate() + 1
+        );*/
+        this.selectedDate++;
+      } else if (inc === -1) {
+        // decrement
+        this.selectedDate;
+      }
     },
   },
   computed: mapGetters({
@@ -159,6 +186,8 @@ export default {
   background-size: 50%;
   background-position: center;
   background-repeat: no-repeat;
+  font-style: normal;
+  user-select: none;
 }
 
 .editIcon {
@@ -182,5 +211,9 @@ export default {
 
 .headerIcons i {
   display: block;
+}
+
+.mealInfo {
+  user-select: none;
 }
 </style>
