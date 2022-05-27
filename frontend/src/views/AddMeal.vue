@@ -59,10 +59,18 @@
               class="icInputField"
               @input="checkIngredient"
               placeholder="Sök ingrediens..."
+              @keyup.enter="addNewIngredient"
             />
           </div>
           <ul v-if="ingredientInput.length > 0" class="suggestionsBox">
-            <li @click="addNewIngredient">
+            <li
+              @click="addNewIngredient"
+              v-if="
+                activeSuggestions.filter(
+                  (a) => a.name.toLowerCase() == ingredientInput.toLowerCase()
+                ).length == 0
+              "
+            >
               <i>Lägg till "{{ ingredientInput }}"</i>
             </li>
             <li
@@ -191,9 +199,8 @@ export default {
 
       this.activeSuggestions = this.suggestions.filter(
         (s) =>
-          s.name
-            .toLocaleLowerCase()
-            .indexOf(this.ingredientInput.toLowerCase()) !== -1
+          s.name.toLowerCase().indexOf(this.ingredientInput.toLowerCase()) !==
+          -1
       );
     },
     generateIngredientId() {
