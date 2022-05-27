@@ -8,13 +8,14 @@ services:
     restart: unless-stopped
     volumes:
       - ./matdagbok.sql:/docker-entrypoint-initdb.d/0_init.sql
+      - /opt/matdagbok_db:/var/lib/mysql
     ports:
       - 3306:3306
     expose:
       - 3306
     environment:
       MYSQL_DATABASE: matdagbok
-      MYSQL_USER: user 
+      MYSQL_USER: user
       MYSQL_PASSWORD: YfQkc3jxhputLA7ufGEDezQxfz4CxHFZBjdts3FbXUs3t
       MYSQL_ROOT_PASSWORD: YfQkc3jxhputLA7ufGEDezQxfz4CxHFZBjdts3FbXUs3t
       TZ: Europe/Stockholm

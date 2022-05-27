@@ -98,7 +98,7 @@ export default {
   },
   created() {
     if (this.user) {
-      this.getConsumption(this.selectedDate);
+      this.getConsumption();
     }
   },
   methods: {
@@ -106,8 +106,8 @@ export default {
       // TODO
       console.log(mealId);
     },
-    getConsumption(date) {
-      const dateString = date.toLocaleDateString("sv-SE");
+    getConsumption() {
+      const dateString = this.selectedDate.toLocaleDateString("sv-SE");
       fetch(
         (process.env.VUE_APP_PATH || "") + "/api/consumption/day/" + dateString,
         {
@@ -127,22 +127,17 @@ export default {
     },
     changeSelectedDate(inc) {
       if (inc === 1) {
-        // increment
-
-        if (this.selectedDateToday) {
-          return;
-        }
+        if (this.selectedDateToday) return;
         this.selectedDate = new Date(
           this.selectedDate.setDate(this.selectedDate.getDate() + 1)
         );
       } else if (inc === -1) {
-        // decrement
         this.selectedDate = new Date(
           this.selectedDate.setDate(this.selectedDate.getDate() - 1)
         );
       }
 
-      this.getConsumption(this.selectedDate);
+      this.getConsumption();
     },
   },
   computed: {
