@@ -10,10 +10,11 @@ router.post('/add', auth, async (req, res) => {
     }
 
     const consumption = req.body.consumption.filter(c => c.name != "" && c.amount > 0 && c.calories > 0).map(c => [c.name, c.amount, c.calories])
+    const date = req.body.date || new Date().toLocaleDateString('sv-SE')
     const mealName = req.body.meal_name || "Måltid";
     const userId = req.user;
 
-    const result = await mysql.addMeal(mealName, userId, consumption)
+    const result = await mysql.addMeal(mealName, date, userId, consumption)
 
     res.json({ ok: result.status })
 })

@@ -68,15 +68,17 @@ async function getIngredients() {
     return queryResult
 }
 
-async function addMeal(mealName, userId, consumption) {
+async function addMeal(mealName, date, userId, consumption) {
     const con = mysql.createConnection(config)
-    const queryResult = await con.promise().query("INSERT INTO meals (name, user_id) VALUES (?, ?)", [mealName, userId])
+    const queryResult = await con.promise().query("INSERT INTO meals (name, user_id, date) VALUES (?, ?, ?)", [mealName, userId, date])
     let insertedId = await con.promise().query("SELECT LAST_INSERT_ID() as id")
     insertedId = insertedId[0][0].id
 
-    consumption = consumption.map(c => [...c, insertedId])
+    consumption = consumption.map(c => [...c, insertedId, date])
 
-    const addConsumption = await con.promise().query("INSERT INTO consumption (name, amount, calories, meal_id) VALUES ?", [consumption])
+    console.log(date)
+
+    const addConsumption = await con.promise().query("INSERT INTO consumption (name, amount, calories, meal_id, date) VALUES ?", [consumption])
     con.end()
 
     return { status: true }
@@ -108,7 +110,7 @@ async function getMeal(mealId, userId) {
 
 async function getConsumptionFromDay(userId, regDate) {
     const con = mysql.createConnection(config)
-    const mealResult = await con.promise().query("SELECT * FROM meals WHERE user_id = ? AND reg_date >= ? AND reg_date < (? + INTERVAL 1 DAY)", [userId, regDate, regDate])
+    const mealResult = await con.promise().query("SELECT * FROM meals WHERE user_id = ? AND date >= ? AND date < (? + INTERVAL 1 DAY)", [userId, regDate, regDate])
 
     if (mealResult[0].length == 0) return { status: true, data: [] }
 
