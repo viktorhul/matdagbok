@@ -3,16 +3,19 @@
     <h1 class="pageHeader">Dagens måltider</h1>
     <h4 class="pageSubheader boxContainer">
       <span @click="changeSelectedDate(-1)" class="switchButton">&lt;</span>
-      <span class="switchButton">{{ selectedDate }}</span>
+      <span class="switchButton switchButton-date">{{
+        selectedDate.toLocaleDateString("sv-SE")
+      }}</span>
       <span
         @click="changeSelectedDate(1)"
-        class="switchButton switchButton-disabled"
+        class="switchButton"
+        :class="{ 'switchButton-disabled': selectedDateToday }"
         >&gt;</span
       >
     </h4>
     <p v-if="!mealsLoaded">Hämtar måltider...</p>
     <p v-else-if="meals.length == 0">Inga registrerade måltider</p>
-    <div class="meals" v-if="meals.length > 0">
+    <div class="meals" v-else>
       <div class="mealCard" v-for="meal in meals" :key="meal.meal_id">
         <h2 @click="meal.isActive = !meal.isActive">
           <span class="mealInfo">
@@ -35,7 +38,7 @@
               class="mealIcon editIcon"
             ></i>
             <i
-              @click="meal.isActive = !meal.isActive"
+              @click.stop="meal.isActive = !meal.isActive"
               class="mealIcon charIcon"
             >
               <span>{{ meal.isActive ? "-" : "+" }}</span>
@@ -66,10 +69,13 @@
         </table>
       </div>
     </div>
-    <div v-else>
-      <p>Du har inte registrerat något i dag</p>
-    </div>
-    <router-link to="/add-meal">Lägg till måltid</router-link>
+    <router-link
+      :to="{
+        name: 'addMeal',
+        params: { date: selectedDate.toLocaleDateString('sv-SE') },
+      }"
+      >Lägg till måltid</router-link
+    >
   </div>
   <div v-else>
     <h1 class="pageHeader">Matdagboken</h1>
@@ -85,22 +91,25 @@ export default {
   name: "HomeView",
   data() {
     return {
-      selectedDate: new Date().toLocaleDateString("sv-SE"),
+      selectedDate: new Date(),
       mealsLoaded: false,
       meals: [],
     };
   },
   created() {
     if (this.user) {
-      const date = new Date();
-      const today =
-        date.getFullYear() +
-        "-" +
-        (Number.parseInt(date.getMonth()) + 1) +
-        "-" +
-        date.getDate();
+      this.getConsumption(this.selectedDate);
+    }
+  },
+  methods: {
+    editMeal(mealId) {
+      // TODO
+      console.log(mealId);
+    },
+    getConsumption(date) {
+      const dateString = date.toLocaleDateString("sv-SE");
       fetch(
-        (process.env.VUE_APP_PATH || "") + "/api/consumption/day/" + today,
+        (process.env.VUE_APP_PATH || "") + "/api/consumption/day/" + dateString,
         {
           headers: {
             "Content-Type": "application/json",
@@ -115,31 +124,38 @@ export default {
             this.meals = data.data;
           }
         });
-    }
-  },
-  methods: {
-    editMeal(mealId) {
-      // TODO
-      console.log(mealId);
     },
     changeSelectedDate(inc) {
       if (inc === 1) {
         // increment
-        // TODO: Increment date
-        console.log(new Date().setDate(this.selectedDate + 1));
-        /*this.selectedDate = this.selectedDate.setDate(
-          this.selectedDate.getDate() + 1
-        );*/
-        this.selectedDate++;
+
+        if (this.selectedDateToday) {
+          return;
+        }
+        this.selectedDate = new Date(
+          this.selectedDate.setDate(this.selectedDate.getDate() + 1)
+        );
       } else if (inc === -1) {
         // decrement
-        this.selectedDate;
+        this.selectedDate = new Date(
+          this.selectedDate.setDate(this.selectedDate.getDate() - 1)
+        );
       }
+
+      this.getConsumption(this.selectedDate);
     },
   },
-  computed: mapGetters({
-    user: "currentUser",
-  }),
+  computed: {
+    selectedDateToday() {
+      return (
+        this.selectedDate.toLocaleDateString("sv-SE") ==
+        new Date().toLocaleDateString("sv-SE")
+      );
+    },
+    ...mapGetters({
+      user: "currentUser",
+    }),
+  },
 };
 </script>
 

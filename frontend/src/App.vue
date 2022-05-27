@@ -83,7 +83,7 @@ export default {
 
 <style>
 body {
-  overscroll-behavior: contain;
+  overscroll-behavior: none;
 }
 
 * {
@@ -233,6 +233,10 @@ h4.pageSubheader + .infoBoxContainer {
 
 .switchButton-disabled {
   background-color: #eee;
+}
+
+.switchButton-date {
+  width: 200px;
 }
 
 a,

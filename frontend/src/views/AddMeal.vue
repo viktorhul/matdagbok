@@ -37,13 +37,13 @@
           name="category"
           :value="alternative"
           :id="alternative"
+          @click="
+            categoryChosen = true;
+            category = alternative;
+          "
         />
         <label :for="alternative">{{ alternative }}</label>
       </div>
-
-      <button class="nextStepButton" @click="categoryChosen = true">
-        Fortsätt
-      </button>
     </div>
     <div v-else-if="isAddingIngredients">
       <Transition name="addIngredients">
@@ -230,6 +230,8 @@ export default {
         },
         body: JSON.stringify({
           meal_name: this.category,
+          date:
+            this.$route.params.date || new Date().toLocaleDateString("sv-SE"),
           consumption: this.ingredients,
         }),
       })
@@ -303,8 +305,14 @@ export default {
 .addingIngredientsBox {
   background-color: #fff;
   position: fixed;
-  width: 100%;
+  width: 700px;
   height: 100%;
+}
+
+@media screen and (max-width: 700px) {
+  .addingIngredientsBox {
+    width: 100%;
+  }
 }
 
 .addingIngredientsBox .headerBox {
@@ -334,6 +342,7 @@ export default {
 .suggestionsBox li {
   text-align: left;
   padding: 10px;
+  list-style-type: none;
 }
 
 .suggestionsBox li .ingredientName {
