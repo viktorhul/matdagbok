@@ -30,5 +30,6 @@ CREATE TABLE IF NOT EXISTS consumption (
     date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     amount INT(6) DEFAULT 0,
     calories INT(6) DEFAULT 0,
+    calorie_type VARCHAR(32),
     reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

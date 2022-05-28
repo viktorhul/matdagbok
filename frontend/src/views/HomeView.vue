@@ -62,7 +62,13 @@
           <tbody>
             <tr v-for="ingredient in meal.ingredients" :key="ingredient.id">
               <td>{{ ingredient.name }}</td>
-              <td>{{ ingredient.amount }}</td>
+              <td>
+                {{
+                  ingredient.calorieCategory == "Normal"
+                    ? ingredient.amount + " " + ingredient.amountUnit
+                    : "-"
+                }}
+              </td>
               <td>{{ ingredient.total_calories }}</td>
             </tr>
           </tbody>
@@ -70,6 +76,7 @@
       </div>
     </div>
     <router-link
+      class="boxLink"
       :to="{
         name: 'addMeal',
         params: { date: selectedDate.toLocaleDateString('sv-SE') },

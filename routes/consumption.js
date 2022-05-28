@@ -9,7 +9,11 @@ router.post('/add', auth, async (req, res) => {
         return res.json({ ok: false, msg: "[consumption] must be set and be a non-empty array" })
     }
 
-    const consumption = req.body.consumption.filter(c => c.name != "" && c.amount > 0 && c.calories > 0).map(c => [c.name, c.amount, c.calories])
+    const consumption = req.body.consumption.filter(c => c.name != "").map(c => [c.name, c.amount, c.amountUnit, ((c.calorieCategory == "Normal") ? c.calories : c.total_calories), c.calorieCategory])
+    if (consumption.length == 0) {
+        return res.json({ ok: false, msg: "[consumption] contains only partially filled elements" })
+    }
+
     const date = req.body.date || new Date().toLocaleDateString('sv-SE')
     const mealName = req.body.meal_name || "Måltid";
     const userId = req.user;

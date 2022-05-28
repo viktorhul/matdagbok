@@ -2,102 +2,135 @@
   <div class="container">
     <h1 class="pageHeader">Ny måltid</h1>
     <p v-if="mealInserted">
+      <!-- TODO: Clean data -->
       Måltiden inlagd!
       <router-link to="/add-meal">Lägg till ny måltid</router-link>
     </p>
-    <div class="infoBoxContainer">
-      <span
-        v-if="categoryChosen"
-        @click="categoryChosen = false"
-        class="infoBox"
-        >{{ category }}</span
-      >
-      <span v-if="ingredients.length > 0" class="infoBox"
-        >{{ ingredients.length }} ingredienser</span
-      >
-      <span v-if="totalCalories > 0" class="infoBox"
-        >{{ totalCalories }} kalorier</span
-      >
-    </div>
-    <div v-if="!categoryChosen">
-      <div
-        class="optionBox"
-        v-for="alternative in [
-          'Frukost',
-          'Lunch',
-          'Middag',
-          'Mellanmål',
-          'Övrigt',
-        ]"
-        :key="alternative"
-      >
-        <input
-          type="radio"
-          v-model="category"
-          name="category"
-          :value="alternative"
-          :id="alternative"
-          @click="
-            categoryChosen = true;
-            category = alternative;
+    <div v-else>
+      <div class="infoBoxContainer">
+        <InfoBox
+          v-if="categoryChosen"
+          @click="categoryChosen = false"
+          icon="fa-solid fa-mug-saucer"
+          :text="category"
+        />
+
+        <InfoBox
+          v-if="ingredients.length > 0"
+          icon="fa-solid fa-carrot"
+          :text="
+            ingredients.length.toString() +
+            ' ingrediens' +
+            (ingredients.length > 1 ? 'er' : '')
           "
         />
-        <label :for="alternative">{{ alternative }}</label>
-      </div>
-    </div>
-    <div v-else-if="isAddingIngredients">
-      <Transition name="addIngredients">
-        <div v-if="addingIngredientBox" class="addingIngredientsBox">
-          <span @click="addingIngredientBox = false" class="headerBox"
-            ><b class="closeIcon">&#10005;</b></span
-          >
-          <div class="inputContainer">
-            <input
-              type="text"
-              ref="ingredientInput"
-              v-model="ingredientInput"
-              class="icInputField"
-              @input="checkIngredient"
-              placeholder="Sök ingrediens..."
-              @keyup.enter="addNewIngredient"
-            />
-          </div>
-          <ul v-if="ingredientInput.length > 0" class="suggestionsBox">
-            <li
-              @click="addNewIngredient"
-              v-if="
-                activeSuggestions.filter(
-                  (a) => a.name.toLowerCase() == ingredientInput.toLowerCase()
-                ).length == 0
-              "
-            >
-              <i>Lägg till "{{ ingredientInput }}"</i>
-            </li>
-            <li
-              v-for="suggestion in activeSuggestions"
-              :key="suggestion.id"
-              @click="addIngredient(suggestion)"
-            >
-              <span class="ingredientName">{{ suggestion.name }}</span>
-            </li>
-          </ul>
-          <p v-else class="hintText">Börja skriv...</p>
-        </div>
-      </Transition>
-      <div v-if="ingredients.length > 0">
-        <IngredientCard
-          v-for="ingredient in ingredients"
-          :key="ingredient.id"
-          :ingredient="ingredient"
-          @updateData="updateData"
+
+        <InfoBox
+          v-if="ingredients.length > 0"
+          icon="fa-solid fa-bolt"
+          :text="totalCalories.toString() + ' kalorier'"
         />
       </div>
-      <!-- TODO: Focus on input field when adding new ingredient -->
-      <span @click="addingIngredientBox = true" class="linkText"
-        >Lägg till ingrediens</span
-      >
+      <div v-if="!categoryChosen">
+        <div
+          class="optionBox"
+          v-for="alternative in [
+            'Frukost',
+            'Lunch',
+            'Middag',
+            'Mellanmål',
+            'Övrigt',
+          ]"
+          :key="alternative"
+        >
+          <input
+            type="radio"
+            v-model="category"
+            name="category"
+            :value="alternative"
+            :id="alternative"
+            @click="
+              categoryChosen = true;
+              category = alternative;
+            "
+          />
+          <label :for="alternative">{{ alternative }}</label>
+        </div>
+      </div>
+      <div v-else-if="isAddingIngredients">
+        <Transition name="addIngredients">
+          <div
+            v-if="addingIngredientBox"
+            class="addingIngredientsBox"
+            @keyup.esc="addingIngredientBox = false"
+          >
+            <span @click="addingIngredientBox = false" class="headerBox"
+              ><b class="closeIcon">&#10005;</b></span
+            >
+            <div class="inputContainer">
+              <input
+                type="text"
+                ref="ingredientInputRef"
+                v-model="ingredientInput"
+                class="icInputField"
+                @input="checkIngredient"
+                placeholder="Sök ingrediens..."
+                @keyup.enter="addNewIngredient"
+              />
+            </div>
+            <ul v-if="ingredientInput.length > 0" class="suggestionsBox">
+              <li
+                @click="addNewIngredient"
+                v-if="
+                  activeSuggestions.filter(
+                    (a) => a.name.toLowerCase() == ingredientInput.toLowerCase()
+                  ).length == 0
+                "
+              >
+                <i>Lägg till "{{ ingredientInput }}"</i>
+              </li>
+              <li
+                v-for="suggestion in activeSuggestions"
+                :key="suggestion.name"
+                @click="addIngredient(suggestion)"
+              >
+                <span class="ingredientName">{{ suggestion.name }}</span>
+              </li>
+            </ul>
+            <p v-else class="hintText">Börja skriv...</p>
+          </div>
+        </Transition>
+        <div v-if="ingredients.length > 0">
+          <IngredientCard
+            v-for="ingredient in ingredients"
+            :key="ingredient.id"
+            :ingredient="ingredient"
+            v-model="ingredient.calorieCategory"
+            :options="['Normal', 'Förenklad']"
+            @updateData="updateData"
+          />
+        </div>
+        <span
+          @click="
+            this.addingIngredientBox = true;
+            this.$nextTick(() => {
+              this.$refs.ingredientInputRef.focus();
+            });
+          "
+          class="linkText boxLink"
+          >Lägg till ingrediens</span
+        >
 
-      <br /><br /><span @click="insertMeal" class="linkText">Spara måltid</span>
+        <br /><br /><span
+          @click="insertMeal"
+          class="linkText boxLink"
+          :class="{
+            'boxLink-disabled':
+              ingredients.filter((i) => i.total_calories > 0).length == 0,
+          }"
+          >Spara måltid</span
+        >
+      </div>
     </div>
   </div>
 </template>
@@ -105,20 +138,29 @@
 <script>
 import { mapGetters } from "vuex";
 import IngredientCard from "@/components/IngredientCard.vue";
+import InfoBox from "@/components/InfoBox.vue";
 export default {
   components: {
     IngredientCard,
+    InfoBox,
   },
   computed: {
     totalCalories() {
       return this.ingredients.reduce((acc, ing) => {
-        if (ing.total_calories > 0) return acc + ing.total_calories;
+        if (Number.parseInt(ing.total_calories) > 0)
+          return acc + Number.parseInt(ing.total_calories);
         else return acc;
       }, 0);
     },
     ...mapGetters({
       user: "currentUser",
     }),
+  },
+  created() {
+    // Testing purposes
+    this.categoryChosen = true;
+    this.category = "Frukost";
+    this.ingredients = [];
   },
   data() {
     return {
@@ -177,10 +219,18 @@ export default {
   },
   methods: {
     updateData(ingredient) {
-      ingredient.total_calories =
-        ingredient.amount && ingredient.calories
-          ? Math.round((ingredient.amount * ingredient.calories) / 100)
-          : 0;
+      if (ingredient.calorieCategory == "Normal") {
+        ingredient.total_calories =
+          ingredient.amount && ingredient.calories
+            ? Math.round((ingredient.amount * ingredient.calories) / 100)
+            : 0;
+      } else if (ingredient.calorieCategory == "Förenklad") {
+        ingredient.total_calories = Number.parseInt(
+          ingredient.custom_total_calories
+        );
+      }
+
+      console.log(ingredient.total_calories);
 
       const ingredientIndex = this.ingredients.findIndex(
         (i) => i.id == ingredient.id
@@ -209,26 +259,49 @@ export default {
     },
     addIngredient(ingredient) {
       ingredient.id = this.generateIngredientId();
-      ingredient.totalCalories = 0;
+      ingredient.total_calories = 0;
+      ingredient.calorieCategory = "Normal";
+      ingredient.amountUnit = "g";
       this.ingredients.push(ingredient);
       this.activeSuggestions = [];
       this.ingredientInput = "";
-      this.$refs.ingredientInput.focus();
+      this.$refs.ingredientInputRef.focus();
     },
     addNewIngredient() {
-      let ingredient = {
-        id: this.generateIngredientId(),
-        name: this.ingredientInput,
-        amount: "",
-        calories: "",
-        total_calories: "",
-      };
-      this.ingredients.push(ingredient);
+      if (this.ingredientInput == "") return;
+
+      const suggestion = this.activeSuggestions.find(
+        (a) => a.name.toLowerCase() == this.ingredientInput.toLowerCase()
+      );
+
+      if (suggestion) {
+        suggestion.id = this.generateIngredientId();
+        suggestion.total_calories = "";
+        suggestion.calorieCategory = "Normal";
+        suggestion.amountUnit = "g";
+        this.ingredients.push(suggestion);
+        console.log(suggestion.id);
+      } else {
+        const ingredient = {
+          id: this.generateIngredientId(),
+          name: this.ingredientInput,
+          amount: "",
+          amountUnit: "g",
+          calories: "",
+          total_calories: "",
+          calorieCategory: "Normal",
+        };
+        this.ingredients.push(ingredient);
+        console.log(ingredient.id);
+      }
+
       this.activeSuggestions = [];
       this.ingredientInput = "";
-      this.$refs.ingredientInput.focus();
+      this.$refs.ingredientInputRef.focus();
     },
     insertMeal() {
+      if (this.ingredients.length == 0) return;
+
       fetch((process.env.VUE_APP_PATH || "") + "/api/consumption/add", {
         method: "POST",
         headers: {
@@ -243,8 +316,11 @@ export default {
         }),
       })
         .then((res) => res.json())
-        .then(() => {
-          this.mealInserted = true;
+        .then((data) => {
+          if (data.ok) {
+            //this.mealInserted = true;
+            this.$router.push("/");
+          }
         });
     },
     updateMeal() {
@@ -376,6 +452,31 @@ export default {
   font-weight: normal;
   padding: 10px;
   border-radius: 5px;
+}
+
+.infoTab {
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.infoTab .infoIcon,
+.infoTab .infoText {
+  border: 2px solid #6591fc;
+  height: 100%;
+  padding: 5px;
+}
+
+.infoTab .infoIcon {
+  background-color: #6591fc;
+  color: white;
+  font-size: 0.7em;
+  border-radius: 10px 0 0 10px;
+}
+
+.infoTab .infoText {
+  border-radius: 0 10px 10px 0;
 }
 
 .addIngredients-enter-active,

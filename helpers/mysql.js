@@ -75,10 +75,8 @@ async function addMeal(mealName, date, userId, consumption) {
     insertedId = insertedId[0][0].id
 
     consumption = consumption.map(c => [...c, insertedId, date])
-
-    console.log(date)
-
-    const addConsumption = await con.promise().query("INSERT INTO consumption (name, amount, calories, meal_id, date) VALUES ?", [consumption])
+    console.log(consumption)
+    const addConsumption = await con.promise().query("INSERT INTO consumption (name, amount, amount_unit, calories, calorie_type, meal_id, date) VALUES ?", [consumption])
     con.end()
 
     return { status: true }
@@ -96,7 +94,7 @@ async function getMeal(mealId, userId) {
     const consumptionResult = await con.promise().query("SELECT * FROM consumption WHERE meal_id = ?", [mealId])
 
     const consumption = consumptionResult[0].map(c => {
-        return { id: c.id, name: c.name, amount: c.amount, calories: c.calories, total_calories: Math.round(c.amount * c.calories / 100) }
+        return { id: c.id, name: c.name, amount: c.amount, amountUnit: c.amount_unit, calories: c.calories, total_calories: (c.calorie_type == "Normal") ? Math.round(c.amount * c.calories / 100) : c.calories, calorieCategory: c.calorie_type }
     })
 
     const data = {
@@ -118,7 +116,7 @@ async function getConsumptionFromDay(userId, regDate) {
     const consumptionResult = await con.promise().query("SELECT * FROM consumption WHERE meal_id IN (?)", [mealIds])
 
     const data = mealResult[0].map(m => {
-        const ingredients = consumptionResult[0].filter(c => c.meal_id == m.id).map(c => { return { id: c.id, name: c.name, amount: c.amount, calories: c.calories, total_calories: Math.round(c.amount * c.calories / 100) } })
+        const ingredients = consumptionResult[0].filter(c => c.meal_id == m.id).map(c => { return { id: c.id, name: c.name, amount: c.amount, amountUnit: c.amount_unit, calories: c.calories, total_calories: (c.calorie_type == "Normal") ? Math.round(c.amount * c.calories / 100) : c.calories, calorieCategory: c.calorie_type } })
         return {
             meal_id: m.id,
             meal_name: m.name,

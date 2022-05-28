@@ -106,6 +106,11 @@ body {
 .navWrapper {
   background-color: #2e2e2e;
   width: 100%;
+  position: fixed;
+}
+
+.navWrapper ~ * {
+  padding-top: 80px;
 }
 
 nav {
@@ -168,7 +173,8 @@ nav .hamburgerIcon div {
   width: 700px;
   left: 0;
   right: 0;
-  margin: 0 auto;
+  margin: 77px auto;
+  padding: 0;
   text-align: left;
   background-color: white;
   border-bottom: 1px solid #ccc;
@@ -254,6 +260,19 @@ p {
 .routerView {
   width: 700px;
   margin: 0 auto;
+}
+
+.boxLink {
+  display: inline-block;
+  padding: 10px 15px;
+  border-radius: 5px;
+  background-color: #6591fc;
+  color: white;
+}
+
+.boxLink-disabled {
+  background-color: #eee !important;
+  color: grey !important;
 }
 
 @media screen and (max-width: 700px) {
