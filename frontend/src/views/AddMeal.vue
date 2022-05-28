@@ -156,12 +156,6 @@ export default {
       user: "currentUser",
     }),
   },
-  created() {
-    // Testing purposes
-    this.categoryChosen = true;
-    this.category = "Frukost";
-    this.ingredients = [];
-  },
   data() {
     return {
       mealInserted: false,
@@ -230,8 +224,6 @@ export default {
         );
       }
 
-      console.log(ingredient.total_calories);
-
       const ingredientIndex = this.ingredients.findIndex(
         (i) => i.id == ingredient.id
       );
@@ -280,7 +272,6 @@ export default {
         suggestion.calorieCategory = "Normal";
         suggestion.amountUnit = "g";
         this.ingredients.push(suggestion);
-        console.log(suggestion.id);
       } else {
         const ingredient = {
           id: this.generateIngredientId(),
@@ -292,7 +283,6 @@ export default {
           calorieCategory: "Normal",
         };
         this.ingredients.push(ingredient);
-        console.log(ingredient.id);
       }
 
       this.activeSuggestions = [];
