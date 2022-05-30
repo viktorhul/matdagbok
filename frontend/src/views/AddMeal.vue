@@ -9,6 +9,9 @@
             <span @click="addingIngredientBox = false" class="headerBox"
               ><b class="closeIcon">&#10005;</b></span
             >
+            <div class="addedIngredients">
+              <span v-for="ingredient in ingredients" :key="ingredient.id">{{ingredient.name}}</span>
+            </div>
             <div class="inputContainer">
               <input
                 type="text"
@@ -161,12 +164,18 @@ export default {
   data() {
     return {
       mealInserted: false,
-      categoryChosen: false,
-      category: "",
-      ingredients: [],
+      categoryChosen: true,
+      category: "Frukost",
+      ingredients: [
+        {
+          name: "Mjölk",
+          calorieCategory: "Förenklad",
+          total_calories: 123
+        }
+      ],
       suggestions: [],
       activeSuggestions: [],
-      addingIngredientBox: false,
+      addingIngredientBox: true,
       ingredientInput: "",
       suggestionboxActive: false,
     };
@@ -341,6 +350,20 @@ export default {
   width: 700px;
   height: 100%;
   margin-top: -22px;
+}
+
+.addedIngredients {
+  border-bottom: 1px solid #ccc;
+  text-align: left;
+}
+
+.addedIngredients span {
+  background-color: rgb(215, 225, 245);
+  display: inline-block;
+  padding: 5px;
+  margin: 5px;
+  font-size: .7em;
+  
 }
 
 @media screen and (max-width: 700px) {
