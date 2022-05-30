@@ -113,6 +113,7 @@
             v-model="ingredient.calorieCategory"
             :options="['Normal', 'Förenklad']"
             @updateData="updateData"
+            @deleteIngredient="deleteIngredient"
           />
         </div>
         <span
@@ -164,18 +165,12 @@ export default {
   data() {
     return {
       mealInserted: false,
-      categoryChosen: true,
-      category: "Frukost",
-      ingredients: [
-        {
-          name: "Mjölk",
-          calorieCategory: "Förenklad",
-          total_calories: 123
-        }
-      ],
+      categoryChosen: false,
+      category: "",
+      ingredients: [],
       suggestions: [],
       activeSuggestions: [],
-      addingIngredientBox: true,
+      addingIngredientBox: false,
       ingredientInput: "",
       suggestionboxActive: false,
     };
@@ -259,7 +254,8 @@ export default {
       this.$refs.ingredientInputRef.focus();
     },
     insertMeal() {
-      if (this.ingredients.length == 0) return;
+      if (this.ingredients.filter(i => i.total_calories > 0).length == 0) return;
+
 
       fetch((process.env.VUE_APP_PATH || "") + "/api/consumption/add", {
         method: "POST",
@@ -285,6 +281,9 @@ export default {
     updateMeal() {
       // TODO
     },
+    deleteIngredient(id) {
+      this.ingredients = this.ingredients.filter(i => i.id !== id);
+    }
   },
 };
 </script>

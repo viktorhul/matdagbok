@@ -8,6 +8,7 @@
         class="invisibleInput"
       />
       <span class="calories">{{ ingredientCalories }} kalorier</span>
+      <span class="calories" @click="$emit('deleteIngredient', localIngredient.id)">&#10005;</span>
     </h2>
     <div class="categoryWrapper">
       <div class="categoryContainer">
@@ -119,7 +120,7 @@ export default {
       },
     };
   },
-  emits: ["updateData"],
+  emits: ["updateData", "deleteIngredient"],
 };
 </script>
 
