@@ -161,58 +161,10 @@ export default {
   data() {
     return {
       mealInserted: false,
-      categoryChosen: true,
-      category: "Frukost",
-      ingredients: [
-        {
-          name: "Knäckebröd",
-          amount: "30",
-          calorieCategory: "Normal",
-          calories: "335"
-        }
-      ],
-      suggestions: [
-        {
-          name: "Mjölk",
-          calories: 80,
-        },
-        {
-          name: "Havregryn",
-          calories: 350,
-        },
-        {
-          name: "Jordgubbssaft",
-          calories: 84,
-        },
-        {
-          name: "Philadelphia, lätt",
-          calories: 128,
-        },
-        {
-          name: "Philadelphia, vanlig",
-          calories: 192,
-        },
-        {
-          name: "Smör",
-          calories: 600,
-        },
-        {
-          name: "Hushållsost",
-          calories: 604,
-        },
-        {
-          name: "Creme fraiche, normal",
-          calories: 175,
-        },
-        {
-          name: "Creme fraiche, lätt",
-          calories: 90,
-        },
-        {
-          name: "Creme fraiche, mini",
-          calories: 50,
-        },
-      ],
+      categoryChosen: false,
+      category: "",
+      ingredients: [],
+      suggestions: [],
       activeSuggestions: [],
       addingIngredientBox: false,
       ingredientInput: "",
