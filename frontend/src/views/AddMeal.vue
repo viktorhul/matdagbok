@@ -1,5 +1,49 @@
 <template>
   <div class="container">
+    <Transition name="addIngredients">
+          <div
+            v-if="addingIngredientBox"
+            class="addingIngredientsBox"
+            @keyup.esc="addingIngredientBox = false"
+          >
+            <span @click="addingIngredientBox = false" class="headerBox"
+              ><b class="closeIcon">&#10005;</b></span
+            >
+            <div class="inputContainer">
+              <input
+                type="text"
+                ref="ingredientInputRef"
+                v-model="ingredientInput"
+                class="icInputField"
+                @input="checkIngredient"
+                placeholder="Sök ingrediens..."
+                @keyup.enter="addNewIngredient"
+              />
+            </div>
+            <ul v-if="ingredientInput.length > 0" class="suggestionsBox">
+              <li
+                
+                @click="addNewIngredient"
+                v-if="
+                  activeSuggestions.filter(
+                    (a) => a.name.toLowerCase() == ingredientInput.toLowerCase()
+                  ).length == 0
+                "
+              >
+                <span class="boxLink">Lägg till "{{ ingredientInput }}"</span>
+              </li>
+              <li
+                class="suggestionListItem"
+                v-for="suggestion in activeSuggestions"
+                :key="suggestion.name"
+                @click="addIngredient(suggestion)"
+              >
+                <span class="ingredientName">{{ suggestion.name }}</span>
+              </li>
+            </ul>
+            <p v-else class="hintText">Börja skriv...</p>
+          </div>
+        </Transition>
     <h1 class="pageHeader">Ny måltid</h1>
     <p v-if="mealInserted">
       <!-- TODO: Clean data -->
@@ -57,49 +101,7 @@
           <label :for="alternative">{{ alternative }}</label>
         </div>
       </div>
-      <div v-else-if="isAddingIngredients">
-        <Transition name="addIngredients">
-          <div
-            v-if="addingIngredientBox"
-            class="addingIngredientsBox"
-            @keyup.esc="addingIngredientBox = false"
-          >
-            <span @click="addingIngredientBox = false" class="headerBox"
-              ><b class="closeIcon">&#10005;</b></span
-            >
-            <div class="inputContainer">
-              <input
-                type="text"
-                ref="ingredientInputRef"
-                v-model="ingredientInput"
-                class="icInputField"
-                @input="checkIngredient"
-                placeholder="Sök ingrediens..."
-                @keyup.enter="addNewIngredient"
-              />
-            </div>
-            <ul v-if="ingredientInput.length > 0" class="suggestionsBox">
-              <li
-                @click="addNewIngredient"
-                v-if="
-                  activeSuggestions.filter(
-                    (a) => a.name.toLowerCase() == ingredientInput.toLowerCase()
-                  ).length == 0
-                "
-              >
-                <i>Lägg till "{{ ingredientInput }}"</i>
-              </li>
-              <li
-                v-for="suggestion in activeSuggestions"
-                :key="suggestion.name"
-                @click="addIngredient(suggestion)"
-              >
-                <span class="ingredientName">{{ suggestion.name }}</span>
-              </li>
-            </ul>
-            <p v-else class="hintText">Börja skriv...</p>
-          </div>
-        </Transition>
+      <div v-else>
         <div v-if="ingredients.length > 0">
           <IngredientCard
             v-for="ingredient in ingredients"
@@ -159,10 +161,16 @@ export default {
   data() {
     return {
       mealInserted: false,
-      categoryChosen: false,
-      category: "",
-      isAddingIngredients: true,
-      ingredients: [],
+      categoryChosen: true,
+      category: "Frukost",
+      ingredients: [
+        {
+          name: "Knäckebröd",
+          amount: "30",
+          calorieCategory: "Normal",
+          calories: "335"
+        }
+      ],
       suggestions: [
         {
           name: "Mjölk",
@@ -380,6 +388,7 @@ export default {
   position: fixed;
   width: 700px;
   height: 100%;
+  margin-top: -22px;
 }
 
 @media screen and (max-width: 700px) {
@@ -409,13 +418,14 @@ export default {
   outline: none;
 }
 
-.suggestionsBox {
-}
-
 .suggestionsBox li {
   text-align: left;
-  padding: 10px;
+  padding: 20px;
   list-style-type: none;
+}
+
+.suggestionsBox li:not(:first-child) {
+  border-top: 1px solid #ccc;
 }
 
 .suggestionsBox li .ingredientName {

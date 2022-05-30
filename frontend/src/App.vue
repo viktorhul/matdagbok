@@ -260,6 +260,7 @@ p {
 .routerView {
   width: 700px;
   margin: 0 auto;
+  padding-bottom: 50px;
 }
 
 .boxLink {
@@ -273,6 +274,10 @@ p {
 .boxLink-disabled {
   background-color: #eee !important;
   color: grey !important;
+}
+
+.boxLink-block {
+  display: block !important;
 }
 
 @media screen and (max-width: 700px) {

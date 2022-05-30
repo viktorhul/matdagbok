@@ -34,6 +34,7 @@
       <div class="inputContainer">
         <label for="">Antal gram</label>
         <input
+        class="textFieldInput"
           @change="$emit('updateData', localIngredient)"
           type="text"
           placeholder="Antal gram"
@@ -43,6 +44,7 @@
       <div class="inputContainer">
         <label for="">Kalorier per 100g</label>
         <input
+        class="textFieldInput"
           @change="$emit('updateData', localIngredient)"
           type="text"
           placeholder="Kalorier per 100g"
@@ -57,6 +59,7 @@
       <div class="inputContainer">
         <label for="">Totalt antal kalorier</label>
         <input
+        class="textFieldInput"
           @change="$emit('updateData', localIngredient)"
           type="text"
           placeholder="Antal kalorier"
@@ -141,11 +144,16 @@ export default {
   display: block;
   font-size: 0.8em;
   margin-bottom: 5px;
+  margin-left: 10px;
 }
 
-.inputContainer input {
-  padding: 5px;
+.textFieldInput {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 10px;
   width: 100%;
+  font-size: 1em;
+  margin-bottom: 10px;
 }
 
 .categoryWrapper {
