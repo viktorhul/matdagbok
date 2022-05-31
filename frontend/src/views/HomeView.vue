@@ -161,7 +161,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .mealCard {
   text-align: left;
   border-bottom: 1px solid #ccc;
