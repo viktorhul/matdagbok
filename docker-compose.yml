@@ -16,8 +16,8 @@ services:
     environment:
       MYSQL_DATABASE: matdagbok
       MYSQL_USER: user
-      MYSQL_PASSWORD: YfQkc3jxhputLA7ufGEDezQxfz4CxHFZBjdts3FbXUs3t
-      MYSQL_ROOT_PASSWORD: YfQkc3jxhputLA7ufGEDezQxfz4CxHFZBjdts3FbXUs3t
+      MYSQL_PASSWORD: pass
+      MYSQL_ROOT_PASSWORD: root_pass
       TZ: Europe/Stockholm
     networks:
       - internalnet
@@ -34,10 +34,10 @@ services:
       DB_HOST: mysql
       DB_PORT: 3306
       DB_USER: 'user'
-      DB_PASSWORD: 'YfQkc3jxhputLA7ufGEDezQxfz4CxHFZBjdts3FbXUs3t'
+      DB_PASSWORD: 'db_pass'
       DB_NAME: matdagbok
-      PASSWORD_SALT: Ssh4DAWqDrv9NyWTMQAPYXR6uTvzU2HsxuYMcA9L5sS2AhxDtsmSwsSA3L
-      TOKEN_SECRET: TNjcZnUehDKz7APMZrKy84AYSGKSkkSerbYRSqAJFDFauwkhzdTKcWnUXN
+      PASSWORD_SALT: salt
+      TOKEN_SECRET: token_secret
       VUE_APP_PATH: ''
     depends_on:
       - mysql
